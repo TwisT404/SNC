@@ -1,17 +1,20 @@
-package suce.app.Model;
+package snc.app.Model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "station")
-public class Station {
+@Table(name = "prestataire")
+public class Prestataire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_station", nullable = false)
+    @Column(name = "id_prestataire", nullable = false)
     private Integer id;
 
     @Column(name = "nom", nullable = false, length = 100)
     private String nom;
+
+    @Column(name = "contact", nullable = false)
+    private String contact;
 
     public Integer getId() {
         return id;
@@ -27,6 +30,14 @@ public class Station {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
 }

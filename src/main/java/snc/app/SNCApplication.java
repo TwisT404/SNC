@@ -1,13 +1,13 @@
-package suce.app;
+package snc.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SuceApplication {
+public class SNCApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SuceApplication.class, args);
+        SpringApplication.run(SNCApplication.class, args);
     }
 
 }

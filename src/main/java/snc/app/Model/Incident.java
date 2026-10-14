@@ -1,4 +1,4 @@
-package suce.app.Model;
+package snc.app.Model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;

@@ -1,9 +1,9 @@
-package suce.app.Controller;
+package snc.app.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/utilisateurs")
-public class UtilisateurController {
+@RequestMapping("/incident")
+public class IncidentController {
 }

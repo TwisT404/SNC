@@ -1,10 +1,10 @@
-package suce.app;
+package snc.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SuceApplicationTests {
+class SNCApplicationTests {
 
     @Test
     void contextLoads() {
