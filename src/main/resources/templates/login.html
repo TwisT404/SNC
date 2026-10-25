@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <p th:if="${error != null && error == 'error_authentifictaion'}">Erreur lors de l'authentification</p>
+    <p th:if="${error != null && error == 'error_empty'}">Erreur avec le mot de passe et/ou le Username</p>
+    <h1>Se connecter :</h1>
+    <form method="POST" action="/login">
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+    </form>
+</body>
+</html>
