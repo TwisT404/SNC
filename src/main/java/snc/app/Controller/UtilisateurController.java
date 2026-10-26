@@ -7,6 +7,8 @@ import snc.app.Model.Utilisateur;
 import snc.app.Repository.UtilisateurRepository;
 import snc.app.Services.UtilisateurService;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/utilisateurs")
 public class UtilisateurController {
@@ -38,6 +40,13 @@ public class UtilisateurController {
     }
 
     ///////////////////// Admin //////////////////////
+    @GetMapping("/admin")
+    public String AdminPage(Model model){
+        List<Utilisateur> users = utilisateurService.afficherUtilisateurs();
+        model.addAttribute("utilisateurs", users);
+        return "admin/index";
+    }
+
     @GetMapping("/admin/ajoutUtilisateur")
     public String aAddUserPage(Model model){
         model.addAttribute("utilisateur", new Utilisateur());

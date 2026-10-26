@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import snc.app.Model.Utilisateur;
 import snc.app.Repository.UtilisateurRepository;
 
+import java.util.List;
+
 @Service
 public class UtilisateurService {
     //attributes
@@ -35,5 +37,9 @@ public class UtilisateurService {
         String mdp = encoder.encode(utilisateur.getMotDePasse());
         utilisateur.setMotDePasse(mdp);
         utilisateurRepository.save(utilisateur);
+    }
+
+    public List<Utilisateur> afficherUtilisateurs() {
+        return utilisateurRepository.findAll();
     }
 }

@@ -5,6 +5,29 @@
     <title>Admin</title>
 </head>
 <body>
-
+    <a th:href="@{utilisateurs/admin/ajoutUtilisateur}">Ajouter un utilisateur</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Prénom</th>
+                <th>Rôle</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${utilisateurs}">
+                <td th:text="${user.identifiantConnexion}"></td>
+                <td th:text="${user.prenom}"></td>
+                <td th:text="${user.profil}"></td>
+                <td><a>Modifier l'utilisateur</a></td>
+                <td><a>Supprimer l'utilisateur</a></td>
+            </tr>
+            <tr th:if="${utilisateurs.isEmpty()}">
+                <td colspan="5">Aucun utilisateur trouvé.</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
