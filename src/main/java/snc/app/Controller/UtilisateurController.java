@@ -2,10 +2,8 @@ package snc.app.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import snc.app.Model.Utilisateur;
 import snc.app.Repository.UtilisateurRepository;
 import snc.app.Services.UtilisateurService;
 
@@ -37,5 +35,18 @@ public class UtilisateurController {
         }
         return "redirect:/dashboard";
 
+    }
+
+    ///////////////////// Admin //////////////////////
+    @GetMapping("/admin/ajoutUtilisateur")
+    public String aAddUserPage(Model model){
+        model.addAttribute("utilisateur", new Utilisateur());
+        return "admin/ajout";
+    }
+
+    @PostMapping("/admin/ajoutUtilisateur")
+    public String AddUser(@ModelAttribute("utilisateur") Utilisateur utilisateur){
+        utilisateurService.ajouterUtilisateur(utilisateur);
+        return "redirect:/admin";
     }
 }

@@ -29,4 +29,11 @@ public class UtilisateurService {
 
         return true;
     }
+
+    public void ajouterUtilisateur(Utilisateur utilisateur){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String mdp = encoder.encode(utilisateur.getMotDePasse());
+        utilisateur.setMotDePasse(mdp);
+        utilisateurRepository.save(utilisateur);
+    }
 }
