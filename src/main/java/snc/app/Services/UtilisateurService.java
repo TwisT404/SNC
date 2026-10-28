@@ -42,4 +42,8 @@ public class UtilisateurService {
     public List<Utilisateur> afficherUtilisateurs() {
         return utilisateurRepository.findAll();
     }
+
+    public void supprimerUtilisateur(int id) {
+        utilisateurRepository.deleteById(id);
+    }
 }

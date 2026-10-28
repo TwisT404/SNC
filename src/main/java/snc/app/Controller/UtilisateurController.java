@@ -3,6 +3,7 @@ package snc.app.Controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import snc.app.Model.Utilisateur;
 import snc.app.Repository.UtilisateurRepository;
 import snc.app.Services.UtilisateurService;
@@ -48,7 +49,7 @@ public class UtilisateurController {
     }
 
     @GetMapping("/admin/ajoutUtilisateur")
-    public String aAddUserPage(Model model){
+    public String addUserPage(Model model){
         model.addAttribute("utilisateur", new Utilisateur());
         return "admin/ajout";
     }
@@ -56,6 +57,18 @@ public class UtilisateurController {
     @PostMapping("/admin/ajoutUtilisateur")
     public String AddUser(@ModelAttribute("utilisateur") Utilisateur utilisateur){
         utilisateurService.ajouterUtilisateur(utilisateur);
-        return "redirect:/admin";
+        return "redirect:/utilisateurs/admin";
+    }
+    @PostMapping("/admin/supprimerUtilisateur/{id}")
+    public  String deleteUser(@PathVariable int id, RedirectAttributes redirectAttributes){
+        try {
+            utilisateurService.supprimerUtilisateur(id);
+            redirectAttributes.addFlashAttribute("delete",true);
+
+        }catch (Exception e){
+            redirectAttributes.addFlashAttribute("delete", false);
+        }
+        return "redirect:/utilisateurs/admin";
+
     }
 }
