@@ -57,8 +57,13 @@ public class UtilisateurController {
     }
 
     @PostMapping("/admin/ajoutUtilisateur")
-    public String AddUser(@ModelAttribute("utilisateur") Utilisateur utilisateur){
-        utilisateurService.ajouterUtilisateur(utilisateur);
+    public String AddUser(@ModelAttribute("utilisateur") Utilisateur utilisateur, RedirectAttributes redirectAttributes){
+        try {
+            utilisateurService.ajouterUtilisateur(utilisateur);
+            redirectAttributes.addFlashAttribute("create", "success");
+        }catch (Exception e){
+            redirectAttributes.addFlashAttribute("create", "error");
+        }
         return "redirect:/utilisateurs/admin";
     }
 

@@ -13,6 +13,10 @@
         <p th:if="${modif == 'success'}">L'utilisateur a bien été modifié !</p>
         <p th:if="${modif == 'error'}" >"Erreur → Problème lors de la modification !</p>
     </div>
+    <div id="notif_creation">
+        <p th:if="${create == 'success'}">L'utilisateur a bien été modifié !</p>
+        <p th:if="${create == 'error'}" >"Erreur → Problème lors de la modification !</p>
+    </div>
     <a th:href="@{/utilisateurs/admin/ajoutUtilisateur}">Ajouter un utilisateur</a>
     <table>
         <thead>
