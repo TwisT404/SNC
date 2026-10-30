@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajout Utilisateur</title>
+</head>
+<body>
+<form th:action="@{/utilisateurs/admin/ajoutUtilisateur}" th:object="${utilisateur}" method="post">
+    <div>
+      <label>Adresse Mail :</label>
+      <input type="email" th:field="*{identifiantConnexion}" name="email" id="email">
+    </div>
+    <div>
+      <label>Mot de Passe :</label>
+      <input type="password" th:field="*{motDePasse}" name="password" id="password">
+    </div>
+    <div>
+      <label for="prenom">Prenom :</label>
+      <input type="text" th:field="*{prenom}" name="prenom" id="prenom">
+    </div>
+    <div>
+      <label>Role Utilisateur :</label>
+      <select th:field="*{profil}" name="role" id="role">
+        <option value="admin">Administrateur</option>
+        <option value="responsable">Responsable d'exploitation</option>
+        <option value="charge">Chargé d'incidence</option>
+      </select>
+    </div>
+    <button type="submit">Ajouter</button>
+  </form>
+</body>
+</html>
