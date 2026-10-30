@@ -46,4 +46,12 @@ public class UtilisateurService {
     public void supprimerUtilisateur(int id) {
         utilisateurRepository.deleteById(id);
     }
+
+    public Utilisateur afficherUtilisateur(int id){
+        return utilisateurRepository.findById(id).isPresent() ? utilisateurRepository.findById(id).get() : null;
+    }
+
+    public void modifierUtilisateur(Utilisateur userCurrentData) {
+        utilisateurRepository.save(userCurrentData);
+    }
 }

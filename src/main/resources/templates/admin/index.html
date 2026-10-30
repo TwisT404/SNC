@@ -7,9 +7,13 @@
 <body>
     <div id="notif_delete">
         <p th:if="${delete == true}">L'utilisateur a bien été supprimmer !</p>
-        <p th:if="${delete == false}" >"Erreur -> Problème lors de la supression !</p>
+        <p th:if="${delete == false}" >"Erreur → Problème lors de la supression !</p>
     </div>
-    <a th:href="@{utilisateurs/admin/ajoutUtilisateur}">Ajouter un utilisateur</a>
+    <div id="notif_modif">
+        <p th:if="${modif == 'success'}">L'utilisateur a bien été modifié !</p>
+        <p th:if="${modif == 'error'}" >"Erreur → Problème lors de la modification !</p>
+    </div>
+    <a th:href="@{/utilisateurs/admin/ajoutUtilisateur}">Ajouter un utilisateur</a>
     <table>
         <thead>
             <tr>
@@ -25,7 +29,7 @@
                 <td th:text="${user.identifiantConnexion}"></td>
                 <td th:text="${user.prenom}"></td>
                 <td th:text="${user.profil}"></td>
-                <td><a>Modifier l'utilisateur</a></td>
+                <td><a th:href="@{/utilisateurs/admin/modifierUtilisateur(id=${user.id})}">Modifier l'utilisateur</a></td>
                 <td>
                     <form th:action="@{/utilisateurs/admin/supprimerUtilisateur/{id}(id=${user.id})}" method="post"
                           onsubmit="return confirm('Voulez-vous vraiment supprimer cette utilisateur ?');">

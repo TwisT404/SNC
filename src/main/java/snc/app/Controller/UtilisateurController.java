@@ -1,5 +1,6 @@
 package snc.app.Controller;
 
+import jakarta.persistence.Id;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import snc.app.Repository.UtilisateurRepository;
 import snc.app.Services.UtilisateurService;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/utilisateurs")
@@ -59,16 +61,54 @@ public class UtilisateurController {
         utilisateurService.ajouterUtilisateur(utilisateur);
         return "redirect:/utilisateurs/admin";
     }
+
+
     @PostMapping("/admin/supprimerUtilisateur/{id}")
     public  String deleteUser(@PathVariable int id, RedirectAttributes redirectAttributes){
         try {
             utilisateurService.supprimerUtilisateur(id);
             redirectAttributes.addFlashAttribute("delete",true);
-
         }catch (Exception e){
             redirectAttributes.addFlashAttribute("delete", false);
         }
         return "redirect:/utilisateurs/admin";
 
+    }
+
+    @GetMapping("/admin/modifierUtilisateur")
+    public String updateUserPage(@RequestParam("id") int id, Model model, RedirectAttributes redirectAttributes){
+        Utilisateur user = utilisateurService.afficherUtilisateur(id);
+        if(user == null){
+            return "error/404";
+        }
+        model.addAttribute("utilisateur", user);
+        return "admin/modifier";
+    }
+
+    @PostMapping("/admin/modifierUtilisateur")
+    public String updateUser(@RequestParam("id") int id, @ModelAttribute("utilisateur") Utilisateur utilisateur, RedirectAttributes redirectAttributes){
+        try {
+            Utilisateur userCurrentData = utilisateurService.afficherUtilisateur(id);
+            if (userCurrentData == null) {
+                return "error/404";
+            }
+
+            if (!Objects.equals(userCurrentData.getIdentifiantConnexion(), utilisateur.getIdentifiantConnexion())  && utilisateur.getIdentifiantConnexion() != null) {
+                userCurrentData.setIdentifiantConnexion(utilisateur.getIdentifiantConnexion());
+            }
+            if (!Objects.equals(userCurrentData.getPrenom(), utilisateur.getPrenom()) && utilisateur.getPrenom() != null) {
+                userCurrentData.setPrenom(utilisateur.getPrenom());
+            }
+            if (!Objects.equals(userCurrentData.getProfil(), utilisateur.getProfil())  && utilisateur.getProfil() != null) {
+                userCurrentData.setProfil(utilisateur.getProfil());
+            }
+            utilisateurService.modifierUtilisateur(userCurrentData);
+            redirectAttributes.addFlashAttribute("modif", "success");
+        }
+        catch (Exception e){
+            redirectAttributes.addFlashAttribute("modif", "error");
+        }
+
+        return "redirect:/utilisateurs/admin";
     }
 }
