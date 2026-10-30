@@ -25,7 +25,7 @@ public class UtilisateurService {
         if (utilisateur == null) {
             return false;
         }
-        return encoder.matches(utilisateur.getMotDePasse(), encoder.encode(password));
+        return encoder.matches(password, utilisateur.getMotDePasse());
     }
 
     public void ajouterUtilisateur(Utilisateur utilisateur){
