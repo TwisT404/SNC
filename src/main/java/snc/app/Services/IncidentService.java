@@ -18,4 +18,8 @@ public class IncidentService {
     public List<Incident> afficherIncidentsProvenantDeEquipement(int id) {
         return incidentRepository.findIncidentByIdEquipement_Id(id);
     }
+
+    public List<Incident> afficherIncidentsNonResolus(){
+        return incidentRepository.findIncidentByStatut("En cours");
+    }
 }

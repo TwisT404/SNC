@@ -5,7 +5,27 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <h1>Tableau de bord</h1>
+    <main>
+        <h1>Tableau de bord des incidents non résolus :</h1>
+        <section>
+            <div>
+                <a>Déclarer un incident</a>
+                <a>Voir l'historique des incidents</a>
+            </div>
+        </section>
+        <section>
+            <h2>Liste des incidents en cours de résolutions :</h2>
+            <article>
+                <div th:each="incident : ${incidents_non_resolus}">
+                    <span th:text="${incident.description}"></span>
+                    <p>Date ouverture : <span th:text="${incident.dateOuverture}"></span></p>
+                    <p>Statut :<span th:text="${incident.statut}"></span></p>
+                    <a>Consulter l'incident</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
 
 </body>
 </html>
