@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Équipements</title>
+</head>
+<body>
+
+<h1>Équipements</h1>
+
+<!-- Filtre par station -->
+<div class="filtre">
+    <label for="filtreStation">Station :</label>
+    <select id="filtreStation">
+        <option value="">Toutes les stations</option>
+        <!-- "station" = nom de l'attribut du modèle (liste de Station) -->
+        <option th:each="s : ${stations}"
+                th:value="${s.id}"
+                th:text="${s.nom}">Station</option>
+    </select>
+</div>
+
+<!-- Liste des équipements -->
+<table id="tableEquipements">
+    <thead>
+    <tr>
+        <th>Référence Unique</th>
+        <th>Libéllé</th>
+        <th>Station</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="e : ${equipements}" th:attr="data-station-id=${e.idStation?.id}">
+        <td th:text="${e.referenceUnique}"></td>
+        <td th:text="${e.libelle}"></td>
+        <td th:text="${e.idStation?.nom}"></td>
+        <td><a th:href="@{/equipements/details/{id}(id=${e.id})}">Consulter la fiche</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<p id="aucun">Aucun équipement pour cette station.</p>
+
+<script>
+    const select = document.getElementById('filtreStation');
+
+    const lignes = document.querySelectorAll('#tableEquipements tbody tr');
+    const messageAucun = document.getElementById('aucun');
+
+    function filtrer() {
+        const stationId = select.value;
+        let visibles = 0;
+
+        lignes.forEach(ligne => {
+            const correspond = stationId === '' || ligne.dataset.stationId === stationId;
+            ligne.style.display = correspond ? '' : 'none';
+            if (correspond) visibles++;
+        });
+
+        messageAucun.style.display = visibles === 0 ? 'block' : 'none';
+    }
+
+    select.addEventListener('change', filtrer);
+    filtrer(); // état initial
+</script>
+
+</body>
+</html>
