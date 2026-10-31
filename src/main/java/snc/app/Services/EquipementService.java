@@ -19,4 +19,8 @@ public class EquipementService {
     public List<Equipement> afficherEquipements() {
         return equipementRepository.findAll();
     }
+
+    public Equipement afficherEquipement(int id) {
+        return equipementRepository.getReferenceById(id);
+    }
 }

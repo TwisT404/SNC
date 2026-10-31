@@ -27,18 +27,16 @@
     <tr>
         <th>Référence Unique</th>
         <th>Libéllé</th>
-        <th>Type</th>
-        <th>État fonctionnement</th>
+        <th>Station</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
-    <!-- data-station-id sert de clé de filtrage -->
     <tr th:each="e : ${equipements}" th:attr="data-station-id=${e.idStation?.id}">
         <td th:text="${e.referenceUnique}"></td>
         <td th:text="${e.libelle}"></td>
-        <td th:text="${e.type}"></td>
-        <td th:text="${e.etatFonctionnement}"></td>
         <td th:text="${e.idStation?.nom}"></td>
+        <td><a th:href="@{/equipements/details/{id}(id=${e.id})}">Consulter la fiche</a></td>
     </tr>
     </tbody>
 </table>
