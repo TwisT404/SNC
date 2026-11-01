@@ -27,7 +27,8 @@ public class IncidentService {
     }
 
     public List<Incident> afficherIncidentsNonResolus(){
-        return incidentRepository.findIncidentByStatut("Non résolu");
+        List<Incident> incidents = incidentRepository.findIncidentByStatut("Non résolu");
+        return incidents;
     }
 
     public void ajouterIncident(Incident incident) {
@@ -48,5 +49,9 @@ public class IncidentService {
         incident.setStatut("Résolu");
         incident.setDateResolution(Instant.now());
         incidentRepository.save(incident);
+    }
+
+    public List<Incident> afficherIncidentsResolus() {
+        return incidentRepository.findIncidentByStatutOrderByDateOuvertureDesc("Résolu");
     }
 }

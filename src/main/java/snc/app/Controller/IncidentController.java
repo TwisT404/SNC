@@ -90,5 +90,12 @@ public class IncidentController {
         return "redirect:/incidents/dashboard";
     }
 
+    @GetMapping("/historique")
+    public String historique(Model model){
+        List<Incident> incidentsResolus = incidentService.afficherIncidentsResolus();
+        model.addAttribute("incidentsResolus", incidentsResolus);
+        return "incidents/historique";
+    }
+
 
 }
