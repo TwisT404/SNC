@@ -6,6 +6,8 @@ import snc.app.Model.Prestataire;
 import snc.app.Repository.IncidentRepository;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,8 +29,10 @@ public class IncidentService {
     }
 
     public List<Incident> afficherIncidentsNonResolus(){
-        List<Incident> incidents = incidentRepository.findIncidentByStatut("Non résolu");
-        return incidents;
+        List<String> status = new ArrayList<String>();
+        status.add("Non résolu");
+        status.add("Affecté");
+        return incidentRepository.findByStatutInOrderByDateOuvertureDesc(status);
     }
 
     public void ajouterIncident(Incident incident) {
@@ -43,7 +47,7 @@ public class IncidentService {
 
     public void mettreStatutResolu(int id){
         Incident incident = incidentRepository.findById(id).orElse(null);
-        if(incident == null){
+        if(incident == null || incident.getIdPrestataire() == null){
             return;
         }
         incident.setStatut("Résolu");

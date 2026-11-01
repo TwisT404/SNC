@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface IncidentRepository extends JpaRepository<Incident, Integer> {
     List<Incident> findIncidentByIdEquipement_Id(Integer idEquipement);
-    List<Incident>  findIncidentByStatut(String statut);
+    List<Incident> findByStatutInOrderByDateOuvertureDesc(List<String> statuts);
     List<Incident>  findIncidentByStatutOrderByDateOuvertureDesc(String statut);
 }
