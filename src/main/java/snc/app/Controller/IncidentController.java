@@ -2,10 +2,7 @@ package snc.app.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import snc.app.Model.Equipement;
 import snc.app.Model.Incident;
@@ -36,8 +33,23 @@ public class IncidentController {
     @GetMapping("/dashboard")
     public String dashboard(Model model){
         List<Incident> incidentsNonResolus = incidentService.afficherIncidentsNonResolus();
+        List<Prestataire> prestataires = prestataireService.afficherPrestataires();
         model.addAttribute("incidents_non_resolus", incidentsNonResolus);
+        model.addAttribute("prestataires", prestataires);
         return "dashboard";
+    }
+
+    @PostMapping("/dashboard/{id}")
+    public String ajoutePrestataire(@PathVariable int id, @RequestParam("idPrestataire") int idPrestataire, RedirectAttributes redirectAttributes)
+    {
+        Incident incident = incidentService.afficherIncident(id);
+        if(incident == null){
+            return "error/404";
+        }
+        incident.setIdPrestataire(prestataireService.afficherPrestataires().get(idPrestataire));
+        incidentService.modifierIncident(incident);
+        redirectAttributes.addFlashAttribute("add_presta_incident", true);
+        return  "redirect:/incidents/dashboard";
     }
 
     @GetMapping("/declarer")

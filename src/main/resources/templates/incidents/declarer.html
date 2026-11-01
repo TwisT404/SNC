@@ -21,13 +21,6 @@
                 <label>Description :</label>
                 <textarea name="description" id="description" cols="30" rows="10" th:field="*{description}"></textarea>
             </div>
-            <div>
-                <label>Prestataire :</label>
-                <select name="prestataire" id="prestataire" th:field="*{idPrestataire}">
-                    <option value="">Aucun prestataire</option>
-                    <option th:each="prestataire : ${prestataires}" th:value="${prestataire.id}" th:text="${prestataire.nom}"></option>
-                </select>
-            </div>
             <button type="submit">Ajouter l'incident</button>
         </form>
     </main>

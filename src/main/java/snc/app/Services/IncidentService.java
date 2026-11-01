@@ -15,15 +15,24 @@ public class IncidentService {
         this.incidentRepository = incidentRepository;
     }
 
+
+    public Incident afficherIncident(int id){
+        return incidentRepository.findById(id).orElse(null);
+    }
+
     public List<Incident> afficherIncidentsProvenantDeEquipement(int id) {
         return incidentRepository.findIncidentByIdEquipement_Id(id);
     }
 
     public List<Incident> afficherIncidentsNonResolus(){
-        return incidentRepository.findIncidentByStatut("En cours");
+        return incidentRepository.findIncidentByStatut("Non résolu");
     }
 
     public void ajouterIncident(Incident incident) {
+        incidentRepository.save(incident);
+    }
+
+    public void modifierIncident(Incident incident) {
         incidentRepository.save(incident);
     }
 }
