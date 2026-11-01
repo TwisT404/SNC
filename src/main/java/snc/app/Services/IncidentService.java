@@ -22,4 +22,8 @@ public class IncidentService {
     public List<Incident> afficherIncidentsNonResolus(){
         return incidentRepository.findIncidentByStatut("En cours");
     }
+
+    public void ajouterIncident(Incident incident) {
+        incidentRepository.save(incident);
+    }
 }
