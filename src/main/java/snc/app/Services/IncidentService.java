@@ -2,6 +2,7 @@ package snc.app.Services;
 
 import org.springframework.stereotype.Service;
 import snc.app.Model.Incident;
+import snc.app.Model.Prestataire;
 import snc.app.Repository.IncidentRepository;
 
 import java.util.List;
@@ -32,7 +33,9 @@ public class IncidentService {
         incidentRepository.save(incident);
     }
 
-    public void modifierIncident(Incident incident) {
+    public void modifierIncident(Incident incident, String statut, Prestataire prestataire) {
+        incident.setIdPrestataire(prestataire);
+        incident.setStatut(statut);
         incidentRepository.save(incident);
     }
 }

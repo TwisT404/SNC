@@ -31,6 +31,9 @@
                     <a>Consulter l'incident</a>
                     <button th:if="${incident.idPrestataire == null}" class="def-presta">Définir un prestataire</button>
                     <form class="form_ajout" th:action="@{/incidents/dashboard/{id}(id=${incident.id})}" method="post"></form>
+                    <form th:if="${incident.idPrestataire != null}">
+                        <button type="submit">Confimer la résolution</button>
+                    </form>
                 </div>
             </article>
         </section>

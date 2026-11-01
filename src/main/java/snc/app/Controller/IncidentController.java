@@ -46,8 +46,9 @@ public class IncidentController {
         if(incident == null){
             return "error/404";
         }
-        incident.setIdPrestataire(prestataireService.afficherPrestataires().get(idPrestataire));
-        incidentService.modifierIncident(incident);
+        Prestataire prestataire = prestataireService.afficherPrestataires().get(idPrestataire);
+
+        incidentService.modifierIncident(incident,"Affecté", prestataire);
         redirectAttributes.addFlashAttribute("add_presta_incident", true);
         return  "redirect:/incidents/dashboard";
     }
