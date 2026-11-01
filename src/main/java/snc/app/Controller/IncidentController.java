@@ -78,5 +78,17 @@ public class IncidentController {
         return  "redirect:/incidents/dashboard";
     }
 
+    @PostMapping("dashboard/{id}/resolution")
+    public String resolution(@PathVariable int id, RedirectAttributes redirectAttributes){
+        try {
+            incidentService.mettreStatutResolu(id);
+            redirectAttributes.addFlashAttribute("resolution",true);
+
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return "redirect:/incidents/dashboard";
+    }
+
 
 }

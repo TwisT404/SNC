@@ -9,8 +9,7 @@
         <div>
             <p th:if="${ajout_incident == true}">L'incident a bien été ajouté!</p>
             <p th:if="${ajout_incident == false}" >"Erreur → Problème lors de l'ajout de l'incident !</p>
-        </div>
-        <div>
+            <p th:if="${resolution == true}">L'incident est bien résolu !</p>
             <p th:if="${add_presta_incident == true}">Le prestataire a bien été ajouté à l'incident !</p>
         </div>
 
@@ -31,7 +30,7 @@
                     <a>Consulter l'incident</a>
                     <button th:if="${incident.idPrestataire == null}" class="def-presta">Définir un prestataire</button>
                     <form class="form_ajout" th:action="@{/incidents/dashboard/{id}(id=${incident.id})}" method="post"></form>
-                    <form th:if="${incident.idPrestataire != null}">
+                    <form th:if="${incident.idPrestataire != null}" th:action="@{/incidents/dashboard/{id}/resolution(id=${incident.id})}" method="post">
                         <button type="submit">Confimer la résolution</button>
                     </form>
                 </div>
