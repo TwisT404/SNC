@@ -5,9 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import snc.app.Model.Equipement;
+import snc.app.Model.Evaluation;
 import snc.app.Model.Incident;
 import snc.app.Model.Prestataire;
 import snc.app.Services.EquipementService;
+import snc.app.Services.EvaluationService;
 import snc.app.Services.IncidentService;
 import snc.app.Services.PrestataireService;
 
@@ -23,11 +25,13 @@ public class IncidentController {
     private final IncidentService incidentService;
     private final EquipementService  equipementService;
     private final PrestataireService prestataireService;
+    private final EvaluationService evaluationService;
 
-    public IncidentController(IncidentService incidentService, EquipementService equipementService, PrestataireService prestataireService) {
+    public IncidentController(IncidentService incidentService, EquipementService equipementService, PrestataireService prestataireService, EvaluationService evaluationService) {
         this.incidentService = incidentService;
         this.equipementService = equipementService;
         this.prestataireService = prestataireService;
+        this.evaluationService = evaluationService;
     }
 
     @GetMapping("/dashboard")
@@ -36,6 +40,7 @@ public class IncidentController {
         List<Prestataire> prestataires = prestataireService.afficherPrestataires();
         model.addAttribute("incidents_non_resolus", incidentsNonResolus);
         model.addAttribute("prestataires", prestataires);
+        model.addAttribute("evaluation", new Evaluation());
         return "dashboard";
     }
 
@@ -79,11 +84,10 @@ public class IncidentController {
     }
 
     @PostMapping("dashboard/{id}/resolution")
-    public String resolution(@PathVariable int id, RedirectAttributes redirectAttributes){
+    public String resolution(@PathVariable int id, @ModelAttribute Evaluation eval, RedirectAttributes redirectAttributes){
         try {
-            incidentService.mettreStatutResolu(id);
+            incidentService.mettreStatutResolu(id, eval);
             redirectAttributes.addFlashAttribute("resolution",true);
-
         }catch (Exception e){
             throw new RuntimeException(e);
         }

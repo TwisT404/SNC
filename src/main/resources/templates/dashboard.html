@@ -30,9 +30,50 @@
                     <a>Consulter l'incident</a>
                     <button class="def-presta">Définir un prestataire</button>
                     <form class="form_ajout" th:action="@{/incidents/dashboard/{id}(id=${incident.id})}" method="post"></form>
-                    <form th:if="${incident.idPrestataire != null}" th:action="@{/incidents/dashboard/{id}/resolution(id=${incident.id})}" method="post">
-                        <button type="submit">Confimer la résolution</button>
-                    </form>
+                    <th:block th:if="${incident.idPrestataire != null}">
+                        <button type="button" onclick="this.nextElementSibling.showModal()">
+                            Confirmer la résolution
+                        </button>
+
+                        <!-- Pop-up 1 : voulez-vous évaluer ? -->
+                        <dialog>
+                            <form th:action="@{/incidents/dashboard/{id}/resolution(id=${incident.id})}" method="post">
+                                <p>Voulez-vous évaluer cet incident ?</p>
+                                <button type="button"
+                                        onclick="const d = this.closest('dialog'); d.close(); d.nextElementSibling.showModal()">
+                                    Oui
+                                </button>
+                                <button type="submit">Non, résoudre sans évaluer</button>
+                                <button type="button" onclick="this.closest('dialog').close()">Annuler</button>
+                            </form>
+                        </dialog>
+
+                        <!-- Pop-up 2 : évaluation -->
+                        <dialog>
+                            <form th:action="@{/incidents/dashboard/{id}/resolution(id=${incident.id})}" method="post">
+                                <h2>Évaluer l'incident</h2>
+                                <p th:text="${incident.description}"></p>
+
+                                <label>Note :
+                                    <select name="note" required>
+                                        <option value="" disabled selected>-- Choisir --</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </label>
+
+                                <label>Commentaire :
+                                    <textarea name="commentaire" maxlength="500"></textarea>
+                                </label>
+
+                                <button type="button" onclick="this.closest('dialog').close()">Annuler</button>
+                                <button type="submit">Valider la résolution</button>
+                            </form>
+                        </dialog>
+                    </th:block>
                 </div>
             </article>
         </section>
