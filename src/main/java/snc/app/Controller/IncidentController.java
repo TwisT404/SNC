@@ -110,5 +110,15 @@ public class IncidentController {
         return "incidents/detail";
     }
 
+    @PostMapping("/{id}/modifier")
+    public String modifierIncident(@PathVariable int id,@RequestParam String description){
+        try {
+            incidentService.modifierDescriptionIncident(id, description);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return "redirect:/incidents/"+id+"/details";
+
+    }
 
 }

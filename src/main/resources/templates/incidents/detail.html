@@ -8,13 +8,19 @@
     <main>
         <h1>Incidents :</h1>
         <section>
-            <a>Modifier les informations</a>
+            <button id="bouton_modifier">Modifier les informations</button>
             <a th:href="@{/incidents/dashboard}">Retour</a>
         </section>
         <section th:object="${incident}">
             <div>
                 <h2>Description : </h2>
-                <p th:text="${incident.description}"></p>
+                <p id="description" th:text="${incident.description}"></p>
+                <form id="formDescription" th:action="@{/incidents/{id}/modifier(id=${incident.id})}"
+                      method="post" hidden>
+                    <input type="text" name="description" th:placeholder="${incident.description}">
+                    <button type="submit">Valider</button>
+                    <button id="refuser" type="button">Annuler</button>
+                </form>
             </div>
             <div>
                 <h2>Équipement concernée : </h2>
@@ -47,3 +53,21 @@
     </main>
 </body>
 </html>
+
+<script>
+    const bouton = document.querySelector('#bouton_modifier');
+    const div = document.querySelector('#description');
+    const form = document.querySelector('#formDescription');
+    const bouton_refus = document.querySelector('#refuser');
+
+    bouton_refus.addEventListener('click', (e) => {
+        div.hidden = false;
+        form.hidden = true;
+    })
+
+    bouton.addEventListener('click', () => {
+        div.hidden = true;
+        form.hidden = false;
+        form.querySelector('input').focus();
+    });
+</script>

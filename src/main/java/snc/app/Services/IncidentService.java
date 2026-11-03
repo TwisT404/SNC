@@ -1,5 +1,6 @@
 package snc.app.Services;
 
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import snc.app.Model.Evaluation;
 import snc.app.Model.Incident;
@@ -68,5 +69,15 @@ public class IncidentService {
 
     public List<Incident> afficherIncidentsResolus() {
         return incidentRepository.findIncidentByStatutOrderByDateOuvertureDesc("Résolu");
+    }
+
+    public void modifierDescriptionIncident(int id, String description) {
+        Incident incident = incidentRepository.findById(id).orElse(null);
+        if(incident == null){
+            throw new RuntimeException("L'incident n'existe pas");
+        }
+
+        incident.setDescription(description);
+        incidentRepository.save(incident);
     }
 }
