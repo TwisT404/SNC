@@ -5,7 +5,124 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <h1>Tableau de bord</h1>
+    <main>
+        <div>
+            <p th:if="${ajout_incident == true}">L'incident a bien été ajouté!</p>
+            <p th:if="${ajout_incident == false}" >"Erreur → Problème lors de l'ajout de l'incident !</p>
+            <p th:if="${resolution == true}">L'incident est bien résolu !</p>
+            <p th:if="${add_presta_incident == true}">Le prestataire a bien été ajouté à l'incident !</p>
+        </div>
+
+        <h1>Tableau de bord des incidents non résolus :</h1>
+        <div>
+            <a th:href="@{/incidents/dashboard(color='rouge')}">Indicateurs Rouges</a>
+            <a th:href="@{/incidents/dashboard(color='jaune')}">Indicateurs Jaunes</a>
+            <a th:href="@{/incidents/dashboard(color='vert')}">Indicateurs Vert</a>
+        </div>
+        <section>
+            <div>
+                <a th:href="@{/incidents/declarer}">Déclarer un incident</a>
+                <a th:href="@{/incidents/historique}">Voir l'historique des incidents résolus</a>
+            </div>
+        </section>
+        <section>
+            <h2>Liste des incidents en cours de résolutions :</h2>
+            <article>
+                <div class="incident_parent" th:each="incident : ${incidents_non_resolus}">
+                    <span th:text="${incident.description}"></span>
+                    <p>Date ouverture : <span th:text="${#temporals.format(incident.dateOuverture.atZone(T(java.time.ZoneId).of('Europe/Paris')), 'dd/MM/yyyy HH:mm')}"></span></p>
+                    <p>Statut :<span th:text="${incident.statut}"></span></p>
+                    <a th:href="@{/incidents/{id}/details(id=${incident.id})}">Consulter l'incident</a>
+                    <button class="def-presta">Définir un prestataire</button>
+                    <form class="form_ajout" th:action="@{/incidents/dashboard/{id}(id=${incident.id})}" method="post"></form>
+                    <th:block th:if="${incident.idPrestataire != null}">
+                        <button type="button" onclick="this.nextElementSibling.showModal()">
+                            Confirmer la résolution
+                        </button>
+
+                        <!-- Pop-up 1 : voulez-vous évaluer ? -->
+                        <dialog>
+                            <form th:action="@{/incidents/dashboard/{id}/resolution(id=${incident.id})}" method="post">
+                                <p>Voulez-vous évaluer cet incident ?</p>
+                                <button type="button"
+                                        onclick="const d = this.closest('dialog'); d.close(); d.nextElementSibling.showModal()">
+                                    Oui
+                                </button>
+                                <button type="submit">Non, résoudre sans évaluer</button>
+                                <button type="button" onclick="this.closest('dialog').close()">Annuler</button>
+                            </form>
+                        </dialog>
+
+                        <!-- Pop-up 2 : évaluation -->
+                        <dialog>
+                            <form th:action="@{/incidents/dashboard/{id}/resolution(id=${incident.id})}" method="post">
+                                <h2>Évaluer l'incident</h2>
+                                <p th:text="${incident.description}"></p>
+
+                                <label>Note :
+                                    <select name="note" required>
+                                        <option value="" disabled selected>-- Choisir --</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </label>
+
+                                <label>Commentaire :
+                                    <textarea name="commentaire" maxlength="500"></textarea>
+                                </label>
+
+                                <button type="button" onclick="this.closest('dialog').close()">Annuler</button>
+                                <button type="submit">Valider la résolution</button>
+                            </form>
+                        </dialog>
+                    </th:block>
+                </div>
+            </article>
+        </section>
+
+        <template id="tpl_prestataire">
+            <div class="champs">
+                <select name="idPrestataire" required>
+                    <option th:each="p : ${prestataires}"
+                            th:value="${p.id - 1}"
+                            th:text="${p.nom}"></option>
+                </select>
+                <button type="submit">Valider</button>
+            </div>
+        </template>
+    </main>
+
 
 </body>
 </html>
+
+<script>
+    const tpl = document.getElementById('tpl_prestataire');
+
+    document.querySelectorAll('.incident_parent').forEach(parent => {
+        const lien = parent.querySelector('.def-presta');
+        const form = parent.querySelector('.form_ajout');
+
+        if (!lien || !form) return;
+
+        lien.addEventListener('click', e => {
+            e.preventDefault();
+
+            const champs = form.querySelector('.champs');
+
+            // Déjà ouvert : on supprime uniquement nos champs
+            if (champs) {
+                champs.remove();
+                form.hidden = true;
+                return;
+            }
+
+            // Fermé : on clone le template et on l'ajoute
+            form.append(tpl.content.cloneNode(true));
+            form.hidden = false;
+        });
+    });
+</script>

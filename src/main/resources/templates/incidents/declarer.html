@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Déclarer un incident</title>
+</head>
+<body>
+    <main>
+        <h1>Déclarer un incident :</h1>
+        <a th:href="@{/incidents/dashboard}">Retour</a>
+        <form th:action="@{/incidents/declarer/envoie}" th:object="${incident}" method="post">
+            <div>
+                <label>Equipement concerné :</label>
+                <select name="equipement_concern" id="equipement_concern" th:field="*{idEquipement}">
+                    <option th:each="equipement : ${equipements}"
+                            th:value="${equipement.id}"
+                            th:text="${equipement.libelle}">
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label>Description :</label>
+                <textarea name="description" id="description" cols="30" rows="10" th:field="*{description}"></textarea>
+            </div>
+            <button type="submit">Ajouter l'incident</button>
+        </form>
+    </main>
+
+
+</body>
+</html>

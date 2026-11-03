@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Historique</title>
+</head>
+<body>
+    <main>
+      <h1>Historique des incidents résolus :</h1>
+      <a th:href="@{/incidents/dashboard}">Retour</a>
+      <section>
+        <div class="incident" th:each="incident : ${incidentsResolus}" th:object="${incident}">
+           <div>
+             <label>Description :</label>
+             <p th:text="*{description}"></p>
+           </div>
+          <div>
+            <label>Date Ouverture :</label>
+            <p th:text="*{dateOuverture}"></p>
+          </div>
+          <div>
+            <label>Date Résolution :</label>
+            <p th:text="*{dateResolution}"></p>
+          </div>
+          <div>
+            <label>Statut :</label>
+            <p th:text="*{statut}"></p>
+          </div>
+          <div>
+            <label>Équipement concerné :</label>
+            <p th:text="*{idEquipement.libelle}"></p>
+          </div>
+          <div>
+            <label>Prestataire sur l'incident :</label>
+            <p th:text="*{idPrestataire.nom}"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+</body>
+</html>

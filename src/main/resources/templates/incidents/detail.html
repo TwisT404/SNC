@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Incidents</title>
+</head>
+<body>
+    <main>
+        <h1>Incidents :</h1>
+        <section>
+            <button id="bouton_modifier">Modifier les informations</button>
+            <a th:href="@{/incidents/dashboard}">Retour</a>
+        </section>
+        <section th:object="${incident}">
+            <div>
+                <h2>Description : </h2>
+                <p id="description" th:text="${incident.description}"></p>
+                <form id="formDescription" th:action="@{/incidents/{id}/modifier(id=${incident.id})}"
+                      method="post" hidden>
+                    <input type="text" name="description" th:placeholder="${incident.description}">
+                    <button type="submit">Valider</button>
+                    <button id="refuser" type="button">Annuler</button>
+                </form>
+            </div>
+            <div>
+                <h2>Équipement concernée : </h2>
+                <p th:text="${incident.idEquipement.libelle}"></p>
+            </div>
+            <div>
+                <h2>Date ouverture : </h2>
+                <p th:text="${#temporals.format(incident.dateOuverture.atZone(T(java.time.ZoneId).of('Europe/Paris')), 'dd/MM/yyyy HH:mm')}"></p>
+            </div>
+            <div>
+                <h2>Station concernée : </h2>
+                <p th:text="${incident.idEquipement.idStation.nom}"></p>
+            </div>
+            <div>
+                <h2>Statut : </h2>
+                <p th:text="${incident.statut}"></p>
+            </div>
+            <div>
+                <h2>Date de résolution : <span th:if="${incident.dateResolution != null}" th:text="${#temporals.format(incident.dateResolution.atZone(T(java.time.ZoneId).of('Europe/Paris')), 'dd/MM/yyyy HH:mm')}"></span><span th:if="${incident.dateResolution == null}">Non résolu !</span></h2>
+            </div>
+            <div>
+                <h2>Prestataire éventuel : <span th:if="${incident.idPrestataire != null}" th:text="${incident.idPrestataire.nom}"></span><span th:if="${incident.idPrestataire == null}"> Aucun prestataire affecté !</span></h2>
+            </div>
+            <div th:if="${evaluation != null}">
+                <h2>Évaluation éventuelle :</h2>
+                <p th:text="${evaluation.note}"></p>
+                <p th:text="${evaluation.commentaire}"></p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+
+<script>
+    const bouton = document.querySelector('#bouton_modifier');
+    const div = document.querySelector('#description');
+    const form = document.querySelector('#formDescription');
+    const bouton_refus = document.querySelector('#refuser');
+
+    bouton_refus.addEventListener('click', (e) => {
+        div.hidden = false;
+        form.hidden = true;
+    })
+
+    bouton.addEventListener('click', () => {
+        div.hidden = true;
+        form.hidden = false;
+        form.querySelector('input').focus();
+    });
+</script>
