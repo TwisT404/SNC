@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Service
 public class AuthentificationService {
+    public static final String NOM_COOKIE_JWT = "JWT";
     private static final Duration DUREE_JETON = Duration.ofHours(1);
 
     private final UtilisateurService utilisateurService;

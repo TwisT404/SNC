@@ -1,6 +1,7 @@
 package snc.app.Security;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -19,6 +22,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+
+import static snc.app.Services.AuthentificationService.NOM_COOKIE_JWT;
 
 @Configuration
 public class ConfigurationSecurite {
@@ -51,14 +56,45 @@ public class ConfigurationSecurite {
     }
 
     @Bean
-    SecurityFilterChain filtreSecurite(HttpSecurity http) throws Exception {
+    BearerTokenResolver bearerTokenResolver() {
+        DefaultBearerTokenResolver resolverEntete = new DefaultBearerTokenResolver();
+        return request -> {
+            String jetonEntete = resolverEntete.resolve(request);
+            if (jetonEntete != null) {
+                return jetonEntete;
+            }
+            if (request.getServletPath().startsWith("/api/")) {
+                return null;
+            }
+
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (NOM_COOKIE_JWT.equals(cookie.getName())) {
+                        return cookie.getValue();
+                    }
+                }
+            }
+            return null;
+        };
+    }
+
+    @Bean
+    SecurityFilterChain filtreSecurite(HttpSecurity http, BearerTokenResolver bearerTokenResolver) throws Exception {
         return http
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(authorization -> authorization
                         .requestMatchers(HttpMethod.POST, "/api/auth/connexion").permitAll()
-                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().permitAll())
-                .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()))
+                        .requestMatchers("/", "/login", "/utilisateurs/", "/error").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/utilisateurs/login", "/logout").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(resourceServer -> resourceServer
+                        .bearerTokenResolver(bearerTokenResolver)
+                        .jwt(Customizer.withDefaults()))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .deleteCookies(NOM_COOKIE_JWT))
                 .build();
     }
 }
