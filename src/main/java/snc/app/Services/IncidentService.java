@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static snc.app.Globals.JAUNE;
 import static snc.app.Globals.ROUGE;
@@ -49,16 +50,16 @@ public class IncidentService {
         switch (color) {
             case "rouge":
                 return incidents.stream()
-                        .filter(incident -> Duration.between(incident.getDateOuverture(), Instant.now()).toHours() >= ROUGE)
+                        .filter(incident -> Duration.between(incident.getDateOuverture(), Instant.now()).toHours() >= ROUGE && Objects.equals(incident.getStatut(), "Non Résolu"))
                         .toList();
             case "jaune":
                 return incidents.stream()
                         .filter(incident -> (Duration.between(incident.getDateOuverture(), Instant.now()).toHours() < ROUGE)
-                                && Duration.between(incident.getDateOuverture(), Instant.now()).toHours() >= JAUNE)
+                                && Duration.between(incident.getDateOuverture(), Instant.now()).toHours() >= JAUNE && Objects.equals(incident.getStatut(), "Non Résolu"))
                         .toList();
             case "vert":
                 return incidents.stream()
-                        .filter(incident -> Duration.between(incident.getDateOuverture(), Instant.now()).toHours() < JAUNE)
+                        .filter(incident -> Duration.between(incident.getDateOuverture(), Instant.now()).toHours() < JAUNE && Objects.equals(incident.getStatut(), "Non Résolu"))
                         .toList();
             default :
                 return incidents;
