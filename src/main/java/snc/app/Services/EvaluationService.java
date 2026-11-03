@@ -16,4 +16,8 @@ public class EvaluationService {
     public void ajouterEvaluation(Evaluation eval) {
         evaluationRepository.save(eval);
     }
+
+    public Evaluation afficherEvaluation(int id) {
+        return evaluationRepository.findById(id).orElse(null);
+    }
 }

@@ -101,5 +101,14 @@ public class IncidentController {
         return "incidents/historique";
     }
 
+    @GetMapping("/{id}/details")
+    public String details(@PathVariable int id, Model model){
+        Incident incident = incidentService.afficherIncident(id);
+        Evaluation eval =  evaluationService.afficherEvaluation(id);
+        model.addAttribute("incident", incident);
+        model.addAttribute("evaluation", eval);
+        return "incidents/detail";
+    }
+
 
 }

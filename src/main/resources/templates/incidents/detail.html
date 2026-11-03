@@ -9,31 +9,39 @@
         <h1>Incidents :</h1>
         <section>
             <a>Modifier les informations</a>
+            <a th:href="@{/incidents/dashboard}">Retour</a>
         </section>
-        <section>
+        <section th:object="${incident}">
             <div>
-                <h2>Description :</h2>
+                <h2>Description : </h2>
+                <p th:text="${incident.description}"></p>
             </div>
             <div>
-                <h2>Équipement concernée :</h2>
+                <h2>Équipement concernée : </h2>
+                <p th:text="${incident.idEquipement.libelle}"></p>
             </div>
             <div>
                 <h2>Date ouverture : </h2>
+                <p th:text="${#temporals.format(incident.dateOuverture.atZone(T(java.time.ZoneId).of('Europe/Paris')), 'dd/MM/yyyy HH:mm')}"></p>
             </div>
             <div>
-                <h2>Station concernée :</h2>
+                <h2>Station concernée : </h2>
+                <p th:text="${incident.idEquipement.idStation.nom}"></p>
             </div>
             <div>
                 <h2>Statut : </h2>
+                <p th:text="${incident.statut}"></p>
             </div>
             <div>
-                <h2>Date de résolution</h2>
+                <h2>Date de résolution : <span th:if="${incident.dateResolution != null}" th:text="${#temporals.format(incident.dateResolution.atZone(T(java.time.ZoneId).of('Europe/Paris')), 'dd/MM/yyyy HH:mm')}"></span><span th:if="${incident.dateResolution == null}">Non résolu !</span></h2>
             </div>
             <div>
-                <h2>Prestataire éventuel :</h2>
+                <h2>Prestataire éventuel : <span th:if="${incident.idPrestataire != null}" th:text="${incident.idPrestataire.nom}"></span><span th:if="${incident.idPrestataire == null}"> Aucun prestataire affecté !</span></h2>
             </div>
-            <div>
+            <div th:if="${evaluation != null}">
                 <h2>Évaluation éventuelle :</h2>
+                <p th:text="${evaluation.note}"></p>
+                <p th:text="${evaluation.commentaire}"></p>
             </div>
         </section>
     </main>

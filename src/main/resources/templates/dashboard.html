@@ -27,7 +27,7 @@
                     <span th:text="${incident.description}"></span>
                     <p>Date ouverture : <span th:text="${#temporals.format(incident.dateOuverture.atZone(T(java.time.ZoneId).of('Europe/Paris')), 'dd/MM/yyyy HH:mm')}"></span></p>
                     <p>Statut :<span th:text="${incident.statut}"></span></p>
-                    <a>Consulter l'incident</a>
+                    <a th:href="@{/incidents/{id}/details(id=${incident.id})}">Consulter l'incident</a>
                     <button class="def-presta">Définir un prestataire</button>
                     <form class="form_ajout" th:action="@{/incidents/dashboard/{id}(id=${incident.id})}" method="post"></form>
                     <th:block th:if="${incident.idPrestataire != null}">
