@@ -14,6 +14,11 @@
         </div>
 
         <h1>Tableau de bord des incidents non résolus :</h1>
+        <div>
+            <a th:href="@{/incidents/dashboard(color='rouge')}">Indicateurs Rouges</a>
+            <a th:href="@{/incidents/dashboard(color='jaune')}">Indicateurs Jaunes</a>
+            <a th:href="@{/incidents/dashboard(color='vert')}">Indicateurs Vert</a>
+        </div>
         <section>
             <div>
                 <a th:href="@{/incidents/declarer}">Déclarer un incident</a>

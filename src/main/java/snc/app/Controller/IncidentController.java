@@ -35,8 +35,8 @@ public class IncidentController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model){
-        List<Incident> incidentsNonResolus = incidentService.afficherIncidentsNonResolus();
+    public String dashboard(@RequestParam(required = false) String color,Model model){
+        List<Incident> incidentsNonResolus = incidentService.afficherIncidentsNonResolus(color);
         List<Prestataire> prestataires = prestataireService.afficherPrestataires();
         model.addAttribute("incidents_non_resolus", incidentsNonResolus);
         model.addAttribute("prestataires", prestataires);

@@ -1,17 +1,22 @@
 package snc.app.Services;
 
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.stereotype.Service;
+import snc.app.Globals;
 import snc.app.Model.Evaluation;
 import snc.app.Model.Incident;
 import snc.app.Model.Prestataire;
 import snc.app.Repository.EvaluationRepository;
 import snc.app.Repository.IncidentRepository;
 
+import javax.print.DocFlavor;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import static snc.app.Globals.JAUNE;
+import static snc.app.Globals.ROUGE;
 
 @Service
 public class IncidentService {
@@ -33,11 +38,31 @@ public class IncidentService {
         return incidentRepository.findIncidentByIdEquipement_Id(id);
     }
 
-    public List<Incident> afficherIncidentsNonResolus(){
+    public List<Incident> afficherIncidentsNonResolus(String color) {
         List<String> status = new ArrayList<String>();
         status.add("Non résolu");
         status.add("Affecté");
-        return incidentRepository.findByStatutInOrderByDateOuvertureDesc(status);
+        List<Incident> incidents = incidentRepository.findByStatutInOrderByDateOuvertureDesc(status);
+        if (color == null) {
+            return incidents;
+        }
+        switch (color) {
+            case "rouge":
+                return incidents.stream()
+                        .filter(incident -> Duration.between(incident.getDateOuverture(), Instant.now()).toHours() >= ROUGE)
+                        .toList();
+            case "jaune":
+                return incidents.stream()
+                        .filter(incident -> (Duration.between(incident.getDateOuverture(), Instant.now()).toHours() < ROUGE)
+                                && Duration.between(incident.getDateOuverture(), Instant.now()).toHours() >= JAUNE)
+                        .toList();
+            case "vert":
+                return incidents.stream()
+                        .filter(incident -> Duration.between(incident.getDateOuverture(), Instant.now()).toHours() < JAUNE)
+                        .toList();
+            default :
+                return incidents;
+        }
     }
 
     public void ajouterIncident(Incident incident) {
