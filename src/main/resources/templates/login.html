@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Connexion</title>
 </head>
 <body>
-    <p th:if="${error != null && error == 'error_authentifictaion'}">Erreur lors de l'authentification</p>
-    <p th:if="${error != null && error == 'error_empty'}">Erreur avec le mot de passe et/ou le Username</p>
+    <p th:if="${param.error != null && param.error[0] == 'authentification'}">
+        Identifiant ou mot de passe incorrect.
+    </p>
+    <p th:if="${param.error != null && param.error[0] == 'empty'}">
+        L’identifiant et le mot de passe sont obligatoires.
+    </p>
     <h1>Se connecter :</h1>
-    <form method="POST" action="/login">
-        <input type="text" name="username" placeholder="Username">
-        <input type="password" name="password" placeholder="Password">
+    <form method="post" th:action="@{/utilisateurs/login}">
+        <label for="username">Identifiant</label>
+        <input id="username" type="text" name="username" autocomplete="username" required>
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" name="password" autocomplete="current-password" required>
+        <button type="submit">Se connecter</button>
     </form>
 </body>
 </html>

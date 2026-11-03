@@ -1,14 +1,19 @@
 package snc.app.Controller;
 
-import jakarta.persistence.Id;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import snc.app.Model.Utilisateur;
-import snc.app.Repository.UtilisateurRepository;
+import snc.app.Services.AuthentificationService;
 import snc.app.Services.UtilisateurService;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,29 +22,46 @@ import java.util.Objects;
 public class UtilisateurController {
 
     private final UtilisateurService utilisateurService;
+    private final AuthentificationService authentificationService;
 
-    public UtilisateurController(UtilisateurService utilisateurService) {
+    public UtilisateurController(
+            UtilisateurService utilisateurService,
+            AuthentificationService authentificationService
+    ) {
         this.utilisateurService = utilisateurService;
+        this.authentificationService = authentificationService;
     }
 
     @GetMapping("/")
-    public String LoginPage(){
+    public String redirigerVersConnexion() {
         return "redirect:/login";
     }
 
     @PostMapping("/login")
-    public String Login(@RequestParam String username, @RequestParam String password, Model model){
-        
-        if(username.isEmpty() || password.isEmpty()){
-            model.addAttribute("error", "error_empty");
-            return "redirect:/login";
+    public String connecter(
+            @RequestParam String username,
+            @RequestParam String password,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        if (username.isBlank() || password.isBlank()) {
+            return "redirect:/login?error=empty";
         }
-        if (!utilisateurService.IsUserValid(username, password)) {
-            model.addAttribute("error", "error_authentification");
-            return "redirect:/login";
-        }
-        return "redirect:/dashboard";
 
+        return authentificationService.connecter(username, password)
+                .map(jeton -> {
+                    ResponseCookie cookie = ResponseCookie.from(
+                                    AuthentificationService.NOM_COOKIE_JWT, jeton.jeton())
+                            .httpOnly(true)
+                            .secure(request.isSecure())
+                            .sameSite("Lax")
+                            .path("/")
+                            .maxAge(Duration.between(Instant.now(), jeton.expiration()))
+                            .build();
+                    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+                    return "redirect:/dashboard";
+                })
+                .orElse("redirect:/login?error=authentification");
     }
 
     ///////////////////// Admin //////////////////////
