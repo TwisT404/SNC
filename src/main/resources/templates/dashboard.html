@@ -40,7 +40,10 @@
                 <div class="incident_parent" th:each="incident : ${incidents_non_resolus}">
                     <span th:text="${incident.description}"></span>
                     <p>Date ouverture : <span th:text="${#temporals.format(incident.dateOuverture.atZone(T(java.time.ZoneId).of('Europe/Paris')), 'dd/MM/yyyy HH:mm')}"></span></p>
-                    <p>Statut :<span th:text="${incident.statut}"></span></p>
+                    <p>Statut : <span class="statut"
+                                      th:with="age=${T(java.time.Duration).between(incident.dateOuverture, maintenant)}"
+                                      th:classappend="${age.compareTo(T(java.time.Duration).ofHours(48)) < 0 ? ' statut--vert' : (age.compareTo(T(java.time.Duration).ofHours(72)) <= 0 ? ' statut--jaune' : ' statut--rouge')}"
+                                      th:text="${incident.statut}"></span></p>
                     <a th:href="@{/incidents/{id}/details(id=${incident.id})}">Consulter l'incident</a>
                     <th:block th:if="${peutDeclarerOuAffecter}">
                         <button class="def-presta">Définir un prestataire</button>

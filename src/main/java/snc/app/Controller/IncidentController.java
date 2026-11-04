@@ -40,6 +40,7 @@ public class IncidentController {
         List<Prestataire> prestataires = prestataireService.afficherPrestataires();
         model.addAttribute("incidents_non_resolus", incidentsNonResolus);
         model.addAttribute("prestataires", prestataires);
+        model.addAttribute("maintenant", Instant.now());
         model.addAttribute("evaluation", new Evaluation());
         model.addAttribute("peutDeclarerOuAffecter", possedeUnDesProfils(authentication,
                 "ROLE_ADMIN", "ROLE_RESPONSABLE"));
