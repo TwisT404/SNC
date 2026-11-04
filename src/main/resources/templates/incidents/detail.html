@@ -7,6 +7,9 @@
 <body>
     <main>
         <h1>Incidents :</h1>
+        <p th:if="${resolution == true}">L'incident a bien été résolu.</p>
+        <p th:if="${evaluationAjoutee == true}">L'évaluation a bien été enregistrée.</p>
+        <p th:if="${erreurEvaluation != null}" th:text="${erreurEvaluation}"></p>
         <section>
             <button id="bouton_modifier">Modifier les informations</button>
             <a th:href="@{/incidents/dashboard}">Retour</a>
@@ -49,6 +52,32 @@
                 <p th:text="${evaluation.note}"></p>
                 <p th:text="${evaluation.commentaire}"></p>
             </div>
+            <th:block th:if="${peutEvaluer and incident.statut == 'Résolu' and evaluation == null}">
+                <button type="button" onclick="document.getElementById('dialogue-evaluation').showModal()">
+                    Évaluer le prestataire
+                </button>
+                <dialog id="dialogue-evaluation">
+                    <form th:action="@{/incidents/{id}/evaluation(id=${incident.id})}"
+                          th:object="${nouvelleEvaluation}" method="post">
+                        <h2>Évaluer l'intervention</h2>
+                        <label>Note :
+                            <select th:field="*{note}" required>
+                                <option value="" disabled selected>-- Choisir --</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </label>
+                        <label>Commentaire :
+                            <textarea th:field="*{commentaire}" maxlength="500"></textarea>
+                        </label>
+                        <button type="button" onclick="this.closest('dialog').close()">Annuler</button>
+                        <button type="submit">Enregistrer l'évaluation</button>
+                    </form>
+                </dialog>
+            </th:block>
         </section>
     </main>
 </body>

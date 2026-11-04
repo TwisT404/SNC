@@ -14,6 +14,7 @@
             <p th:if="${ajout_incident == true}">L'incident a bien été ajouté!</p>
             <p th:if="${ajout_incident == false}" >"Erreur → Problème lors de l'ajout de l'incident !</p>
             <p th:if="${resolution == true}">L'incident est bien résolu !</p>
+            <p th:if="${erreur_resolution != null}" th:text="${erreur_resolution}"></p>
             <p th:if="${add_presta_incident == true}">Le prestataire a bien été ajouté à l'incident !</p>
         </div>
 
@@ -25,7 +26,7 @@
         </div>
         <section>
             <div>
-                <a th:href="@{/incidents/declarer}">Déclarer un incident</a>
+                <a th:if="${peutDeclarerOuAffecter}" th:href="@{/incidents/declarer}">Déclarer un incident</a>
                 <a th:href="@{/incidents/historique}">Voir l'historique des incidents résolus</a>
             </div>
         </section>
@@ -37,49 +38,20 @@
                     <p>Date ouverture : <span th:text="${#temporals.format(incident.dateOuverture.atZone(T(java.time.ZoneId).of('Europe/Paris')), 'dd/MM/yyyy HH:mm')}"></span></p>
                     <p>Statut :<span th:text="${incident.statut}"></span></p>
                     <a th:href="@{/incidents/{id}/details(id=${incident.id})}">Consulter l'incident</a>
-                    <button class="def-presta">Définir un prestataire</button>
-                    <form class="form_ajout" th:action="@{/incidents/dashboard/{id}(id=${incident.id})}" method="post"></form>
+                    <th:block th:if="${peutDeclarerOuAffecter}">
+                        <button class="def-presta">Définir un prestataire</button>
+                        <form class="form_ajout" th:action="@{/incidents/dashboard/{id}(id=${incident.id})}" method="post"></form>
+                    </th:block>
                     <th:block th:if="${incident.idPrestataire != null}">
                         <button type="button" onclick="this.nextElementSibling.showModal()">
                             Confirmer la résolution
                         </button>
 
-                        <!-- Pop-up 1 : voulez-vous évaluer ? -->
                         <dialog>
                             <form th:action="@{/incidents/dashboard/{id}/resolution(id=${incident.id})}" method="post">
-                                <p>Voulez-vous évaluer cet incident ?</p>
-                                <button type="button"
-                                        onclick="const d = this.closest('dialog'); d.close(); d.nextElementSibling.showModal()">
-                                    Oui
-                                </button>
-                                <button type="submit">Non, résoudre sans évaluer</button>
+                                <p>Confirmer la résolution de cet incident ?</p>
+                                <button type="submit">Confirmer</button>
                                 <button type="button" onclick="this.closest('dialog').close()">Annuler</button>
-                            </form>
-                        </dialog>
-
-                        <!-- Pop-up 2 : évaluation -->
-                        <dialog>
-                            <form th:action="@{/incidents/dashboard/{id}/resolution(id=${incident.id})}" method="post">
-                                <h2>Évaluer l'incident</h2>
-                                <p th:text="${incident.description}"></p>
-
-                                <label>Note :
-                                    <select name="note" required>
-                                        <option value="" disabled selected>-- Choisir --</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                    </select>
-                                </label>
-
-                                <label>Commentaire :
-                                    <textarea name="commentaire" maxlength="500"></textarea>
-                                </label>
-
-                                <button type="button" onclick="this.closest('dialog').close()">Annuler</button>
-                                <button type="submit">Valider la résolution</button>
                             </form>
                         </dialog>
                     </th:block>
