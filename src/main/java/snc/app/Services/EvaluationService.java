@@ -31,8 +31,11 @@ public class EvaluationService {
             throw new IllegalArgumentException("La note doit être comprise entre 1 et 5.");
         }
 
-        evaluation.setIdIncident(incident);
-        evaluationRepository.save(evaluation);
+        Evaluation eval_to_save = new Evaluation();      // no id, no version -> INSERT
+        eval_to_save.setNote(evaluation.getNote());
+        eval_to_save.setCommentaire(evaluation.getCommentaire()); // copy your other fields here
+        eval_to_save.setIdIncident(incident);
+        evaluationRepository.save(eval_to_save);
     }
 
     public Evaluation afficherEvaluation(int idIncident) {

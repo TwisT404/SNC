@@ -37,11 +37,11 @@
             <label>Équipement concerné :</label>
             <p th:text="*{idEquipement.libelle}"></p>
           </div>
-          <a th:href="@{/incidents/{id}/details(id=${incident.id})}">Consulter le détail</a>
           <div>
             <label>Prestataire sur l'incident :</label>
             <p th:text="*{idPrestataire.nom}"></p>
           </div>
+        <a th:href="@{/incidents/{id}/details(id=${incident.id})}">Consulter le détail</a>
         </div>
       </section>
     </main>

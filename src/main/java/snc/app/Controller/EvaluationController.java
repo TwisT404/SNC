@@ -14,7 +14,4 @@ public class EvaluationController {
     public EvaluationController(EvaluationService evaluationService) {
         this.evaluationService = evaluationService;
     }
-
-
-
 }

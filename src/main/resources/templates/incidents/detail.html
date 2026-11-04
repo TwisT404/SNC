@@ -19,7 +19,7 @@
         <p th:if="${erreurEvaluation != null}" th:text="${erreurEvaluation}"></p>
         <section>
             <button id="bouton_modifier">Modifier les informations</button>
-            <a th:href="@{/incidents/dashboard}">Retour</a>
+            <a th:href="@{/incidents/historique}" style="margin-left:15px;">Retour</a>
         </section>
         <section th:object="${incident}">
             <div>
@@ -56,8 +56,14 @@
             </div>
             <div th:if="${evaluation != null}">
                 <h2>Évaluation éventuelle :</h2>
-                <p th:text="${evaluation.note}"></p>
-                <p th:text="${evaluation.commentaire}"></p>
+                <div>
+                    <h3>Note :</h3>
+                    <p th:text="${evaluation.note}"></p>
+                </div>
+                <div>
+                    <h3>Commentaire :</h3>
+                    <p th:text="${evaluation.commentaire}" th:if="${evaluation.commentaire != null}"></p>
+                </div>
             </div>
             <th:block th:if="${peutEvaluer and incident.statut == 'Résolu' and evaluation == null}">
                 <button type="button" onclick="document.getElementById('dialogue-evaluation').showModal()">
