@@ -59,7 +59,7 @@ public class UtilisateurController {
                             .maxAge(Duration.between(Instant.now(), jeton.expiration()))
                             .build();
                     response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-                    return "redirect:/dashboard";
+                    return "redirect:/incidents/dashboard";
                 })
                 .orElse("redirect:/login?error=authentification");
     }
