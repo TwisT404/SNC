@@ -1,0 +1,266 @@
+
+/* ==========================================
+   DECLARER UN INCIDENT - SNE
+   Design harmonisé avec le dashboard
+========================================== */
+
+:root {
+    --sne-blue: #064785;
+    --sne-blue-dark: #00366d;
+    --sne-blue-light: #0099f5;
+    --sne-yellow: #ffb900;
+
+    --sne-background: #f3f7fb;
+    --sne-white: #ffffff;
+
+    --sne-text: #173b61;
+    --sne-muted: #6b829b;
+    --sne-border: #d9e6f2;
+
+    --sne-shadow: 0 8px 24px rgba(0, 54, 109, 0.08);
+}
+
+/* ==========================================
+   PAGE
+========================================== */
+
+body {
+    margin: 0;
+    background: var(--sne-background);
+    color: var(--sne-text);
+    font-family: inherit;
+}
+
+main {
+    width: min(100% - 48px, 1296px);
+    margin: 45px auto 60px;
+}
+
+/* ==========================================
+   TITRE
+========================================== */
+
+main h1 {
+    color: var(--sne-blue);
+    font-size: 36px;
+    font-weight: 800;
+    margin: 0 0 30px;
+}
+
+/* ==========================================
+   BOUTON RETOUR
+========================================== */
+
+main > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 20px;
+    margin-bottom: 30px;
+
+    background: var(--sne-white);
+    color: var(--sne-blue);
+
+    border: 1px solid var(--sne-border);
+    border-radius: 9px;
+
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+
+    box-shadow: 0 3px 10px rgba(0, 54, 109, 0.04);
+
+    transition: all 0.2s ease;
+}
+
+main > a:hover {
+    background: var(--sne-blue);
+    color: var(--sne-white);
+    border-color: var(--sne-blue);
+
+    transform: translateY(-2px);
+    box-shadow: var(--sne-shadow);
+}
+
+/* ==========================================
+   FORMULAIRE
+========================================== */
+
+main form {
+    max-width: 850px;
+    margin: 0 auto;
+
+    padding: 35px;
+
+    background: var(--sne-white);
+
+    border: 1px solid var(--sne-border);
+    border-top: 5px solid var(--sne-blue-light);
+    border-radius: 14px;
+
+    box-shadow: var(--sne-shadow);
+}
+
+/* Groupes de champs */
+
+main form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+/* ==========================================
+   LABELS
+========================================== */
+
+main form label {
+    color: var(--sne-blue);
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   SELECT ET TEXTAREA
+========================================== */
+
+main form select,
+main form textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 13px 15px;
+
+    background: #fbfdff;
+    color: var(--sne-text);
+
+    border: 1px solid var(--sne-border);
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    transition: border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+/* Liste des équipements */
+
+main form select {
+    min-height: 48px;
+    cursor: pointer;
+}
+
+/* Description */
+
+main form textarea {
+    min-height: 200px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+/* Focus */
+
+main form select:focus,
+main form textarea:focus {
+    outline: none;
+
+    background: var(--sne-white);
+    border-color: var(--sne-blue-light);
+
+    box-shadow: 0 0 0 3px rgba(0, 153, 245, 0.12);
+}
+
+/* Placeholder et texte */
+
+main form textarea::placeholder {
+    color: #9aadc0;
+}
+
+/* ==========================================
+   BOUTON DE SOUMISSION
+========================================== */
+
+main form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 48px;
+    padding: 12px 24px;
+
+    background: var(--sne-blue);
+    color: var(--sne-white);
+
+    border: 1px solid var(--sne-blue);
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+main form button:hover {
+    background: var(--sne-blue-dark);
+    border-color: var(--sne-blue-dark);
+
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 54, 109, 0.15);
+}
+
+main form button:active {
+    transform: translateY(0);
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1024px) {
+
+    main {
+        width: calc(100% - 48px);
+    }
+
+    main h1 {
+        font-size: 30px;
+    }
+
+    main form {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 640px) {
+
+    main {
+        width: calc(100% - 32px);
+        margin: 30px auto 40px;
+    }
+
+    main h1 {
+        font-size: 25px;
+        margin-bottom: 25px;
+    }
+
+    main form {
+        padding: 22px 18px;
+    }
+
+    main form textarea {
+        min-height: 160px;
+    }
+
+    main form button {
+        width: 100%;
+    }
+}

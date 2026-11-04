@@ -2,13 +2,17 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tableau de bord</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/styles/layout/navbar.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/footer.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/common.css}">
+    <link rel="stylesheet" th:href="@{/styles/incidents/dashboard.css}">
 </head>
 <body>
+    <div th:insert="layout/navbar::navbar"></div>
     <h1>Tableau de bord</h1>
-    <form method="post" th:action="@{/logout}">
-        <button type="submit">Se déconnecter</button>
-    </form>
     <main>
         <div>
             <p th:if="${ajout_incident == true}">L'incident a bien été ajouté!</p>
@@ -71,6 +75,7 @@
         </template>
     </main>
 
+    <div th:insert="layout/footer::footer"></div>
 
 </body>
 </html>

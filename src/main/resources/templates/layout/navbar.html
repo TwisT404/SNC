@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>NavigationBar</title>
+</head>
+
+<nav th:fragment="navbar" class="navbar-snc">
+
+    <div class="navbar-container">
+
+        <!-- Logo -->
+        <a th:href="@{/incidents/dashboard}" class="navbar-logo">
+            <img th:src="@{/img/logo_SNC.png}" alt="Logo SNC">
+        </a>
+
+        <!-- Navigation -->
+        <ul class="navbar-menu">
+
+            <li>
+                <a th:href="@{/incidents/dashboard}" class="nav-link-snc">
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/equipements}" class="nav-link-snc">
+                    <i class="bi bi-pc-display"></i>
+                    Équipements
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/evaluations}" class="nav-link-snc">
+                    <i class="bi bi-clipboard-check"></i>
+                    Évaluations
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/utilisateurs/admin}" class="nav-link-snc">
+                    <i class="bi bi-people"></i>
+                    Administrateurs
+                </a>
+            </li>
+            <li>
+                <form method="post" th:action="@{/logout}" class="logout-form">
+                    <button type="submit" class="nav-link-snc logout-button">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Se déconnecter
+                    </button>
+                </form>
+            </li>
+
+        </ul>
+
+    </div>
+
+</nav>
+
+</html>

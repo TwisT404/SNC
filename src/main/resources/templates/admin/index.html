@@ -1,50 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/styles/layout/navbar.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/footer.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/common.css}">
 </head>
 <body>
-    <div id="notif_delete">
-        <p th:if="${delete == true}">L'utilisateur a bien été supprimmer !</p>
-        <p th:if="${delete == false}" >"Erreur → Problème lors de la supression !</p>
-    </div>
-    <div id="notif_modif">
-        <p th:if="${modif == 'success'}">L'utilisateur a bien été modifié !</p>
-        <p th:if="${modif == 'error'}" >"Erreur → Problème lors de la modification !</p>
-    </div>
-    <div id="notif_creation">
-        <p th:if="${create == 'success'}">L'utilisateur a bien été modifié !</p>
-        <p th:if="${create == 'error'}" >"Erreur → Problème lors de la modification !</p>
-    </div>
-    <a th:href="@{/utilisateurs/admin/ajoutUtilisateur}">Ajouter un utilisateur</a>
-    <table>
-        <thead>
-            <tr>
-                <th>Email</th>
-                <th>Prénom</th>
-                <th>Rôle</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="user : ${utilisateurs}">
-                <td th:text="${user.identifiantConnexion}"></td>
-                <td th:text="${user.prenom}"></td>
-                <td th:text="${user.profil}"></td>
-                <td><a th:href="@{/utilisateurs/admin/modifierUtilisateur(id=${user.id})}">Modifier l'utilisateur</a></td>
-                <td>
-                    <form th:action="@{/utilisateurs/admin/supprimerUtilisateur/{id}(id=${user.id})}" method="post"
-                          onsubmit="return confirm('Voulez-vous vraiment supprimer cette utilisateur ?');">
-                        <button type="submit">Supprimer l'utilisateur</button>
-                    </form>
-                </td>
-            </tr>
-            <tr th:if="${utilisateurs.isEmpty()}">
-                <td colspan="5">Aucun utilisateur trouvé.</td>
-            </tr>
-        </tbody>
-    </table>
+    <div th:insert="layout/navbar::navbar"></div>
+    <main>
+        <h1>Administration des utilisateurs</h1>
+        <div id="notif_delete" th:if="${delete != null}">
+            <p th:if="${delete == true}">L'utilisateur a bien été supprimmer !</p>
+            <p th:if="${delete == false}" >"Erreur → Problème lors de la supression !</p>
+        </div>
+        <div id="notif_modif" th:if="${modif != null}">
+            <p th:if="${modif == 'success'}">L'utilisateur a bien été modifié !</p>
+            <p th:if="${modif == 'error'}" >"Erreur → Problème lors de la modification !</p>
+        </div>
+        <div id="notif_creation" th:if="${create != null}">
+            <p th:if="${create == 'success'}">L'utilisateur a bien été modifié !</p>
+            <p th:if="${create == 'error'}" >"Erreur → Problème lors de la modification !</p>
+        </div>
+        <p><a th:href="@{/utilisateurs/admin/ajoutUtilisateur}">Ajouter un utilisateur</a></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Prénom</th>
+                    <th>Rôle</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${utilisateurs}">
+                    <td th:text="${user.identifiantConnexion}"></td>
+                    <td th:text="${user.prenom}"></td>
+                    <td th:text="${user.profil}"></td>
+                    <td><a th:href="@{/utilisateurs/admin/modifierUtilisateur(id=${user.id})}">Modifier l'utilisateur</a></td>
+                    <td>
+                        <form th:action="@{/utilisateurs/admin/supprimerUtilisateur/{id}(id=${user.id})}" method="post"
+                              onsubmit="return confirm('Voulez-vous vraiment supprimer cette utilisateur ?');">
+                            <button type="submit">Supprimer l'utilisateur</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${utilisateurs.isEmpty()}">
+                    <td colspan="5">Aucun utilisateur trouvé.</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <div th:insert="layout/footer::footer"></div>
 </body>
 </html>

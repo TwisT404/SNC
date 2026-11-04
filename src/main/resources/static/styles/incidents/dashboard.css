@@ -1,0 +1,377 @@
+/* =========================================================
+   SNC - Tableau de bord des incidents
+   Palette harmonisée avec la navbar :
+   bleu marine, bleu électrique et jaune/orange
+   ========================================================= */
+
+:root {
+    --snc-navy: #063e7c;
+    --snc-blue: #07549e;
+    --snc-electric: #0796ed;
+    --snc-light-blue: #eaf4fc;
+    --snc-yellow: #ffbd00;
+    --snc-orange: #f59e0b;
+    --snc-text: #17324d;
+    --snc-muted: #64788c;
+    --snc-border: #d8e5f0;
+    --snc-white: #ffffff;
+    --snc-bg: #f3f7fb;
+    --snc-shadow: 0 8px 24px rgba(6, 62, 124, 0.09);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--snc-bg);
+    color: var(--snc-text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Titres */
+body > h1,
+main > h1 {
+    width: min(1200px, 92%);
+    margin: 30px auto 18px;
+    color: var(--snc-navy);
+    font-weight: 750;
+    letter-spacing: -0.4px;
+}
+
+body > h1 {
+    font-size: clamp(1.7rem, 3vw, 2.25rem);
+}
+
+main > h1 {
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--snc-yellow);
+    font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+}
+
+/* Contenu principal */
+main {
+    width: min(1200px, 92%);
+    margin: 0 auto 48px;
+}
+
+/* Messages de confirmation / erreur */
+main > div:first-child {
+    display: grid;
+    gap: 8px;
+    margin: 20px 0 26px;
+}
+
+main > div:first-child p {
+    margin: 0;
+    padding: 12px 16px;
+    border: 1px solid var(--snc-border);
+    border-left: 5px solid var(--snc-electric);
+    border-radius: 8px;
+    background: var(--snc-white);
+    color: var(--snc-text);
+}
+
+main > div:first-child p:empty {
+    display: none;
+}
+
+/* Liens et boutons : base commune */
+main a,
+main button {
+    font: inherit;
+}
+
+main a {
+    color: var(--snc-blue);
+    font-weight: 650;
+    text-decoration: none;
+    transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+
+main a:hover {
+    color: var(--snc-electric);
+}
+
+/* Bloc des indicateurs et actions */
+main > h1 + div,
+main > section:first-of-type > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 18px 0 24px;
+}
+
+main > h1 + div a,
+main > section:first-of-type > div a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 17px;
+    border: 1px solid var(--snc-border);
+    border-radius: 9px;
+    background: var(--snc-white);
+    box-shadow: 0 3px 10px rgba(6, 62, 124, .05);
+}
+
+main > h1 + div a:hover,
+main > section:first-of-type > div a:hover {
+    transform: translateY(-2px);
+    border-color: var(--snc-electric);
+    background: var(--snc-light-blue);
+}
+
+/* Indicateurs : rouge, jaune, vert */
+main > h1 + div a:nth-child(1) {
+    border-left: 5px solid #dc3545;
+}
+
+main > h1 + div a:nth-child(2) {
+    border-left: 5px solid var(--snc-yellow);
+}
+
+main > h1 + div a:nth-child(3) {
+    border-left: 5px solid #249b62;
+}
+
+/* Section incidents */
+main > section:last-of-type {
+    margin-top: 30px;
+}
+
+main > section:last-of-type > h2 {
+    margin: 0 0 18px;
+    color: var(--snc-navy);
+    font-size: 1.35rem;
+}
+
+main > section:last-of-type > article {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 18px;
+}
+
+/* Carte d'un incident */
+.incident_parent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+    padding: 22px;
+    border: 1px solid var(--snc-border);
+    border-top: 5px solid var(--snc-electric);
+    border-radius: 13px;
+    background: var(--snc-white);
+    box-shadow: var(--snc-shadow);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.incident_parent:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(6, 62, 124, .13);
+}
+
+.incident_parent > span {
+    color: var(--snc-navy);
+    font-size: 1.1rem;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.incident_parent p {
+    margin: 0;
+    color: var(--snc-muted);
+    font-size: .94rem;
+}
+
+.incident_parent p span {
+    margin-left: 5px;
+    color: var(--snc-text);
+    font-weight: 650;
+}
+
+.incident_parent > a {
+    margin-top: 2px;
+}
+
+/* Boutons dans les cartes */
+.incident_parent button,
+.dialog button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 9px 14px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--snc-blue);
+    color: var(--snc-white);
+    font-weight: 650;
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.incident_parent button:hover,
+.dialog button:hover {
+    transform: translateY(-1px);
+    background: var(--snc-electric);
+}
+
+/* Bouton "Définir un prestataire" */
+.incident_parent .def-presta {
+    border: 1px solid var(--snc-blue);
+    background: var(--snc-white);
+    color: var(--snc-blue);
+}
+
+.incident_parent .def-presta:hover {
+    background: var(--snc-light-blue);
+}
+
+/* Formulaire d'ajout du prestataire */
+.form_ajout {
+    width: 100%;
+}
+
+.form_ajout[hidden] {
+    display: none;
+}
+
+.form_ajout .champs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--snc-border);
+    border-radius: 9px;
+    background: var(--snc-light-blue);
+}
+
+select,
+textarea {
+    max-width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #bfd1e1;
+    border-radius: 7px;
+    background: var(--snc-white);
+    color: var(--snc-text);
+    font: inherit;
+}
+
+.form_ajout select {
+    flex: 1 1 180px;
+}
+
+/* Fenêtres de dialogue */
+dialog {
+    width: min(480px, calc(100% - 32px));
+    max-height: 85vh;
+    padding: 25px;
+    border: 1px solid var(--snc-border);
+    border-top: 5px solid var(--snc-yellow);
+    border-radius: 14px;
+    background: var(--snc-white);
+    color: var(--snc-text);
+    box-shadow: 0 20px 60px rgba(0, 25, 55, .25);
+}
+
+dialog::backdrop {
+    background: rgba(3, 28, 54, .58);
+    backdrop-filter: blur(3px);
+}
+
+dialog h2 {
+    margin-top: 0;
+    color: var(--snc-navy);
+}
+
+dialog p {
+    color: var(--snc-muted);
+}
+
+dialog form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+dialog label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--snc-navy);
+    font-weight: 650;
+}
+
+dialog textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+dialog button[type="button"] {
+    border: 1px solid var(--snc-border);
+    background: #eef3f8;
+    color: var(--snc-text);
+}
+
+dialog button[type="button"]:hover {
+    background: #dfeaf3;
+}
+
+dialog button[type="submit"] {
+    background: var(--snc-navy);
+}
+
+dialog button[type="submit"]:hover {
+    background: var(--snc-electric);
+}
+
+/* Focus clavier */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(255, 189, 0, .75);
+    outline-offset: 3px;
+}
+
+/* Petits écrans */
+@media (max-width: 700px) {
+    body > h1,
+    main > h1,
+    main {
+        width: 94%;
+    }
+
+    body > h1 {
+        margin-top: 22px;
+    }
+
+    main > h1 + div,
+    main > section:first-of-type > div {
+        flex-direction: column;
+    }
+
+    main > h1 + div a,
+    main > section:first-of-type > div a {
+        width: 100%;
+    }
+
+    .incident_parent {
+        padding: 17px;
+    }
+
+    .form_ajout .champs {
+        flex-direction: column;
+    }
+
+    .form_ajout .champs select,
+    .form_ajout .champs button {
+        width: 100%;
+    }
+}

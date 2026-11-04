@@ -1,29 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Modifier Utilisateur</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/styles/layout/navbar.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/footer.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/common.css}">
 </head>
 <body>
-
+    <div th:insert="layout/navbar::navbar"></div>
+    <main>
+        <h1>Modifier un utilisateur</h1>
+        <form th:action="@{/utilisateurs/admin/modifierUtilisateur(id=${utilisateur.id})}" th:object="${utilisateur}" method="post">
+            <div>
+                <label>Adresse Mail :</label>
+                <input type="email" th:field="*{identifiantConnexion}" name="email" id="email">
+            </div>
+            <div>
+                <label for="prenom">Prenom :</label>
+                <input type="text" th:field="*{prenom}" name="prenom" id="prenom">
+            </div>
+            <div>
+                <label>Role Utilisateur :</label>
+                <select th:field="*{profil}" name="role" id="role">
+                    <option value="admin">Administrateur</option>
+                    <option value="responsable">Responsable d'exploitation</option>
+                    <option value="charge">Chargé d'incidence</option>
+                </select>
+            </div>
+            <button type="submit">Ajouter</button>
+        </form>
+    </main>
+    <div th:insert="layout/footer::footer"></div>
 </body>
-    <form th:action="@{/utilisateurs/admin/modifierUtilisateur(id=${utilisateur.id})}" th:object="${utilisateur}" method="post">
-        <div>
-            <label>Adresse Mail :</label>
-            <input type="email" th:field="*{identifiantConnexion}" name="email" id="email">
-        </div>
-        <div>
-            <label for="prenom">Prenom :</label>
-            <input type="text" th:field="*{prenom}" name="prenom" id="prenom">
-        </div>
-        <div>
-            <label>Role Utilisateur :</label>
-            <select th:field="*{profil}" name="role" id="role">
-                <option value="admin">Administrateur</option>
-                <option value="responsable">Responsable d'exploitation</option>
-                <option value="charge">Chargé d'incidence</option>
-            </select>
-        </div>
-        <button type="submit">Ajouter</button>
-    </form>
 </html>

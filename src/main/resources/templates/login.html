@@ -2,22 +2,26 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Connexion</title>
+    <link rel="stylesheet" th:href="@{/styles/layout/common.css}">
 </head>
-<body>
-    <p th:if="${param.error != null && param.error[0] == 'authentification'}">
-        Identifiant ou mot de passe incorrect.
-    </p>
-    <p th:if="${param.error != null && param.error[0] == 'empty'}">
-        L’identifiant et le mot de passe sont obligatoires.
-    </p>
-    <h1>Se connecter :</h1>
-    <form method="post" th:action="@{/utilisateurs/login}">
-        <label for="username">Identifiant</label>
-        <input id="username" type="text" name="username" autocomplete="username" required>
-        <label for="password">Mot de passe</label>
-        <input id="password" type="password" name="password" autocomplete="current-password" required>
-        <button type="submit">Se connecter</button>
-    </form>
+<body class="login-page">
+    <main>
+        <h1>Se connecter :</h1>
+        <p th:if="${param.error != null && param.error[0] == 'authentification'}">
+            Identifiant ou mot de passe incorrect.
+        </p>
+        <p th:if="${param.error != null && param.error[0] == 'empty'}">
+            L’identifiant et le mot de passe sont obligatoires.
+        </p>
+        <form method="post" th:action="@{/utilisateurs/login}">
+            <label for="username">Identifiant</label>
+            <input id="username" type="text" name="username" autocomplete="username" required>
+            <label for="password">Mot de passe</label>
+            <input id="password" type="password" name="password" autocomplete="current-password" required>
+            <button type="submit">Se connecter</button>
+        </form>
+    </main>
 </body>
 </html>

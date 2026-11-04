@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Footer</title>
+</head>
+<body>
+
+<footer th:fragment="footer" class="site-footer">
+
+    <div class="footer__top">
+        <div class="footer__brand">
+            <img src="/images/logo-sne.png"
+                 alt="Logo SNE"
+                 class="footer__logo">
+
+            <p>
+                Plateforme de gestion des incidents
+                et des équipements.
+            </p>
+        </div>
+
+        <div class="footer__links">
+            <a href="/mentions-legales">Mentions légales</a>
+            <a href="/confidentialite">Confidentialité</a>
+            <a href="/cookies">Cookies</a>
+        </div>
+    </div>
+
+    <div class="footer__bottom">
+        <p>
+            © 2026 SNE. Tous droits réservés.
+        </p>
+
+        <span class="footer__status">
+            <span class="status-dot"></span>
+            Système opérationnel
+        </span>
+    </div>
+
+</footer>
+
+</body>
+</html>

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import snc.app.Services.EvaluationService;
 
 @Controller
-@RequestMapping("/evaluation")
+@RequestMapping("/evaluations")
 public class EvaluationController {
 
     private final EvaluationService evaluationService;

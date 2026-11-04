@@ -105,6 +105,7 @@ public class ConfigurationSecurite {
         return http
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(authorization -> authorization
+                        .requestMatchers("/styles/**", "/img/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/connexion").permitAll()
                         .requestMatchers("/", "/login", "/utilisateurs/", "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/utilisateurs/login", "/logout").permitAll()

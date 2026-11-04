@@ -1,0 +1,219 @@
+:root {
+    --snc-navy: #063e7c;
+    --snc-blue: #07549e;
+    --snc-accent: #0796ed;
+    --snc-yellow: #ffbd00;
+    --snc-background: #f3f7fb;
+    --snc-surface: #ffffff;
+    --snc-text: #17324d;
+    --snc-muted: #64788c;
+    --snc-border: #d8e5f0;
+    --snc-shadow: 0 8px 24px rgba(6, 62, 124, 0.09);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--snc-background);
+    color: var(--snc-text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    line-height: 1.6;
+}
+
+body > main {
+    flex: 1;
+    width: min(1200px, 92%);
+    margin: 36px auto 48px;
+}
+
+main h1 {
+    margin: 0 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--snc-yellow);
+    color: var(--snc-navy);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 750;
+    letter-spacing: -0.4px;
+}
+
+main h2,
+main h3 {
+    color: var(--snc-navy);
+}
+
+main a {
+    color: var(--snc-blue);
+    font-weight: 650;
+    text-decoration: none;
+    transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+
+main a:hover {
+    color: var(--snc-accent);
+}
+
+main button,
+main input,
+main select,
+main textarea {
+    font: inherit;
+}
+
+main button {
+    min-height: 42px;
+    padding: 9px 16px;
+    border: 1px solid var(--snc-blue);
+    border-radius: 8px;
+    background: var(--snc-blue);
+    color: var(--snc-surface);
+    font-weight: 650;
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+}
+
+main button:hover {
+    transform: translateY(-1px);
+    background: var(--snc-accent);
+}
+
+main input,
+main select,
+main textarea {
+    max-width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #bfd1e1;
+    border-radius: 7px;
+    background: var(--snc-surface);
+    color: var(--snc-text);
+}
+
+main input:focus,
+main select:focus,
+main textarea:focus {
+    outline: 3px solid rgba(7, 150, 237, .18);
+    border-color: var(--snc-accent);
+}
+
+main form:not(.logout-form) {
+    display: grid;
+    gap: 18px;
+}
+
+main form:not(.logout-form) > div {
+    display: grid;
+    gap: 7px;
+}
+
+main form:not(.logout-form) label {
+    color: var(--snc-navy);
+    font-weight: 650;
+}
+
+main table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border: 1px solid var(--snc-border);
+    border-radius: 10px;
+    background: var(--snc-surface);
+    box-shadow: var(--snc-shadow);
+}
+
+main th,
+main td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--snc-border);
+    text-align: left;
+    vertical-align: middle;
+}
+
+main th {
+    background: #eaf4fc;
+    color: var(--snc-navy);
+    font-weight: 700;
+}
+
+main tr:last-child td {
+    border-bottom: 0;
+}
+
+main td form {
+    display: inline-flex !important;
+}
+
+main > div,
+main > section,
+main > form {
+    margin-bottom: 22px;
+}
+
+main > div:not(:has(table)):not(:has(form)),
+main > section,
+main > form {
+    padding: 22px;
+    border: 1px solid var(--snc-border);
+    border-radius: 12px;
+    background: var(--snc-surface);
+    box-shadow: var(--snc-shadow);
+}
+
+.login-page {
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.login-page > main {
+    flex: 0 1 440px;
+    width: 100%;
+    margin: 0;
+    padding: 32px;
+    border: 1px solid var(--snc-border);
+    border-top: 5px solid var(--snc-accent);
+    border-radius: 14px;
+    background: var(--snc-surface);
+    box-shadow: var(--snc-shadow);
+}
+
+.login-page > main form {
+    gap: 14px;
+}
+
+.login-page > main p {
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    border-left: 4px solid var(--snc-accent);
+    border-radius: 6px;
+    background: #eaf4fc;
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid rgba(255, 189, 0, .75);
+    outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+    body > main {
+        width: 94%;
+        margin: 24px auto 36px;
+    }
+
+    main > div:not(:has(table)):not(:has(form)),
+    main > section,
+    main > form {
+        padding: 17px;
+    }
+
+    main table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Détails de l'Équipement</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/styles/layout/navbar.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/footer.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/common.css}">
 </head>
 <body>
+    <div th:insert="layout/navbar::navbar"></div>
     <main>
         <h1>Equipement : <span th:text="${equipement.referenceUnique}"></span></h1>
         <div>
@@ -33,5 +39,6 @@
             </div>
         </div>
     </main>
+    <div th:insert="layout/footer::footer"></div>
 </body>
 </html>
