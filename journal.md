@@ -12,7 +12,7 @@
 
 
 ## ARCHITECTURE
-- Dépôt : https://…
+- Dépôt : [https://…](https://github.com/TwisT404/SNC)
 - Schéma : ![architecture](docs/architecture.png)
 
 ## TESTS
@@ -35,17 +35,55 @@
 |  F11  |            Tableau de bord            |             X              |         X          |
 
 - Exceptions : @ControllerAdvice ou ResponseStatusException ? Pourquoi ?
+  - @ControllerAdvice -> centraliser le traitement des exceptions 
 - SOLID : principe(s) appliqué(s) (où, pourquoi) ; principes écartés (pourquoi)
-- Requête SQL native : où ? analyse critique
+  -  Inversion des dépendances
+    - Facilite l'appel des fonctions à la DB -> Plus simple pour les tests unitaires
+    - Les controllers ne dépendent pas des services et inversement
+    - Swagger : Les controllers peuvent être exécutés plus simplement
+- Requête SQL native :
+  - Aucune requête SQL native
 - @Transactional : où ? pourquoi ?
+  - @Transactional
+
 
 ## LOT ALPHA
 ### Fonctionnalité transverse 1 : …
-- Besoin · périmètre envisagé · choix et essais · ce qui fonctionne · difficultés · reste à faire
+- Besoin : Journal métier
+- Périmètre envisagé : 
+- Choix et essais : 
+- Ce qui fonctionne :
+- Difficultés :
+- Reste à faire :
+  
 ### Fonctionnalité transverse 2 : …
-
+- Besoin : Supervision avancée
+- Périmètre envisagé : Incidents
+- Choix et essais :
+  - Filtre des incidents du plus ancien au plus récent avec tri par indicateur de couleur
+- Ce qui fonctionne :
+  - L'ensemble marche  
+- Difficultés :
+  - Filtrer par indicateurs 
+- Reste à faire : Finis
+  
 ## BILAN
-- Contribution de chacun : …
-- Plus grande difficulté et comment elle a été surmontée : …
+- Contribution de chacun :
+  - Léonardo :
+    - Travaillé sur la partie Login, la gestion du Token et des rôles
+    - S'occupe de l'affichage des évaluations pour chaque incident
+    - Fais en sorte que le code ait bien été structuré
+  - Cédric :
+    - Mise en place des fonctionnalités pour les incidents, évaluations sur les incidents et les équipements
+    - Mise en place d'une gestion des utilisateurs pour les admins
+    - Mise en place du CSS
+- Plus grande difficulté et comment elle a été surmontée :
+    - Cédric : Mise en place de l'évaluation suite à une résolution -> Proposer 3 options : Résoudre avec évaluation, résoudre sans évaluation et retour sans résolution
+    - Léonardo : Mettre en place l'authentification  JWT et de faire fonctionner avec les rôles ->Créer un token à la connexion puis protéger les bonnes pages et actions selon le profil
+      
 - Fonctionnalités non réalisées et pourquoi : …
+  
 - Trois points à retenir du cours et du projet : …
+  - L'importance des gestions d'erreur
+  - L'importance de bien connaître les différences entre chaque annotation
+  - L'importance d'avoir une bonne structure ayant chacun un rôle à respecter
