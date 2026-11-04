@@ -2,14 +2,10 @@ package snc.app.Services;
 
 
 import org.springframework.stereotype.Service;
-import snc.app.Globals;
-import snc.app.Model.Evaluation;
 import snc.app.Model.Incident;
 import snc.app.Model.Prestataire;
-import snc.app.Repository.EvaluationRepository;
 import snc.app.Repository.IncidentRepository;
 
-import javax.print.DocFlavor;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -23,11 +19,9 @@ import static snc.app.Globals.ROUGE;
 public class IncidentService {
 
     private final IncidentRepository incidentRepository;
-    private final EvaluationRepository evaluationRepository;
 
-    public IncidentService(IncidentRepository incidentRepository, EvaluationRepository evaluationRepository) {
+    public IncidentService(IncidentRepository incidentRepository) {
         this.incidentRepository = incidentRepository;
-        this.evaluationRepository = evaluationRepository;
     }
 
 
@@ -76,17 +70,14 @@ public class IncidentService {
         incidentRepository.save(incident);
     }
 
-    public void mettreStatutResolu(int id, Evaluation eval) {
-        Incident incident = incidentRepository.findById(id).orElse(null);
-        if(incident == null || incident.getIdPrestataire() == null){
-            return;
+    public void mettreStatutResolu(int id) {
+        Incident incident = incidentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("L'incident demandé n'existe pas."));
+        if (incident.getIdPrestataire() == null) {
+            throw new IllegalStateException("Un prestataire doit être affecté avant la résolution.");
         }
-        if (eval != null && eval.getNote() != null) {
-            Evaluation nouvelle = new Evaluation();   // id = null → INSERT
-            nouvelle.setNote(eval.getNote());
-            nouvelle.setCommentaire(eval.getCommentaire());
-            nouvelle.setIdIncident(incident);// ou
-            evaluationRepository.save(nouvelle);
+        if ("Résolu".equals(incident.getStatut())) {
+            throw new IllegalStateException("Cet incident est déjà résolu.");
         }
         incident.setStatut("Résolu");
         incident.setDateResolution(Instant.now());

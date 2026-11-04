@@ -1,5 +1,6 @@
 package snc.app.Controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,6 @@ import snc.app.Services.IncidentService;
 import snc.app.Services.PrestataireService;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -35,13 +34,21 @@ public class IncidentController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(@RequestParam(required = false) String color,Model model){
+    public String dashboard(@RequestParam(required = false) String color, Model model,
+                            Authentication authentication) {
         List<Incident> incidentsNonResolus = incidentService.afficherIncidentsNonResolus(color);
         List<Prestataire> prestataires = prestataireService.afficherPrestataires();
         model.addAttribute("incidents_non_resolus", incidentsNonResolus);
         model.addAttribute("prestataires", prestataires);
         model.addAttribute("evaluation", new Evaluation());
+        model.addAttribute("peutDeclarerOuAffecter", possedeUnDesProfils(authentication,
+                "ROLE_ADMIN", "ROLE_RESPONSABLE"));
         return "dashboard";
+    }
+
+    private boolean possedeUnDesProfils(Authentication authentication, String... profils) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> List.of(profils).contains(authority.getAuthority()));
     }
 
     @PostMapping("/dashboard/{id}")
@@ -84,14 +91,15 @@ public class IncidentController {
     }
 
     @PostMapping("dashboard/{id}/resolution")
-    public String resolution(@PathVariable int id, @ModelAttribute Evaluation eval, RedirectAttributes redirectAttributes){
+    public String resolution(@PathVariable int id, RedirectAttributes redirectAttributes){
         try {
-            incidentService.mettreStatutResolu(id, eval);
+            incidentService.mettreStatutResolu(id);
             redirectAttributes.addFlashAttribute("resolution",true);
-        }catch (Exception e){
-            throw new RuntimeException(e);
+            return "redirect:/incidents/" + id + "/details";
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            redirectAttributes.addFlashAttribute("erreur_resolution", exception.getMessage());
+            return "redirect:/incidents/dashboard";
         }
-        return "redirect:/incidents/dashboard";
     }
 
     @GetMapping("/historique")
@@ -102,12 +110,31 @@ public class IncidentController {
     }
 
     @GetMapping("/{id}/details")
-    public String details(@PathVariable int id, Model model){
+    public String details(@PathVariable int id, Model model, Authentication authentication){
         Incident incident = incidentService.afficherIncident(id);
+        if (incident == null) {
+            return "error/404";
+        }
         Evaluation eval =  evaluationService.afficherEvaluation(id);
         model.addAttribute("incident", incident);
         model.addAttribute("evaluation", eval);
+        model.addAttribute("nouvelleEvaluation", new Evaluation());
+        model.addAttribute("peutEvaluer", authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN")
+                        || authority.getAuthority().equals("ROLE_RESPONSABLE")));
         return "incidents/detail";
+    }
+
+    @PostMapping("/{id}/evaluation")
+    public String evaluerIncident(@PathVariable int id, @ModelAttribute Evaluation evaluation,
+                                  RedirectAttributes redirectAttributes) {
+        try {
+            evaluationService.ajouterEvaluation(id, evaluation);
+            redirectAttributes.addFlashAttribute("evaluationAjoutee", true);
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            redirectAttributes.addFlashAttribute("erreurEvaluation", exception.getMessage());
+        }
+        return "redirect:/incidents/" + id + "/details";
     }
 
     @PostMapping("/{id}/modifier")
