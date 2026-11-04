@@ -43,9 +43,6 @@ public class EquipementController {
     public String GetDetails(@PathVariable int id, Model model){
         Equipement equipement = equipementService.afficherEquipement(id);
 
-        if (equipement == null) {
-            return "error/404";
-        }
         List<Incident> incidents = incidentService.afficherIncidentsProvenantDeEquipement(equipement.getId());
 
         model.addAttribute("incidents", incidents);

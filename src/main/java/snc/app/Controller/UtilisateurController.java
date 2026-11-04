@@ -80,24 +80,16 @@ public class UtilisateurController {
 
     @PostMapping("/admin/ajoutUtilisateur")
     public String AddUser(@ModelAttribute("utilisateur") Utilisateur utilisateur, RedirectAttributes redirectAttributes){
-        try {
-            utilisateurService.ajouterUtilisateur(utilisateur);
-            redirectAttributes.addFlashAttribute("create", "success");
-        }catch (Exception e){
-            redirectAttributes.addFlashAttribute("create", "error");
-        }
+        utilisateurService.ajouterUtilisateur(utilisateur);
+        redirectAttributes.addFlashAttribute("create", "success");
         return "redirect:/utilisateurs/admin";
     }
 
 
     @PostMapping("/admin/supprimerUtilisateur/{id}")
     public  String deleteUser(@PathVariable int id, RedirectAttributes redirectAttributes){
-        try {
-            utilisateurService.supprimerUtilisateur(id);
-            redirectAttributes.addFlashAttribute("delete",true);
-        }catch (Exception e){
-            redirectAttributes.addFlashAttribute("delete", false);
-        }
+        utilisateurService.supprimerUtilisateur(id);
+        redirectAttributes.addFlashAttribute("delete",true);
         return "redirect:/utilisateurs/admin";
 
     }
@@ -105,36 +97,24 @@ public class UtilisateurController {
     @GetMapping("/admin/modifierUtilisateur")
     public String updateUserPage(@RequestParam("id") int id, Model model, RedirectAttributes redirectAttributes){
         Utilisateur user = utilisateurService.afficherUtilisateur(id);
-        if(user == null){
-            return "error/404";
-        }
         model.addAttribute("utilisateur", user);
         return "admin/modifier";
     }
 
     @PostMapping("/admin/modifierUtilisateur")
     public String updateUser(@RequestParam("id") int id, @ModelAttribute("utilisateur") Utilisateur utilisateur, RedirectAttributes redirectAttributes){
-        try {
-            Utilisateur userCurrentData = utilisateurService.afficherUtilisateur(id);
-            if (userCurrentData == null) {
-                return "error/404";
-            }
-
-            if (!Objects.equals(userCurrentData.getIdentifiantConnexion(), utilisateur.getIdentifiantConnexion())  && utilisateur.getIdentifiantConnexion() != null) {
-                userCurrentData.setIdentifiantConnexion(utilisateur.getIdentifiantConnexion());
-            }
-            if (!Objects.equals(userCurrentData.getPrenom(), utilisateur.getPrenom()) && utilisateur.getPrenom() != null) {
-                userCurrentData.setPrenom(utilisateur.getPrenom());
-            }
-            if (!Objects.equals(userCurrentData.getProfil(), utilisateur.getProfil())  && utilisateur.getProfil() != null) {
-                userCurrentData.setProfil(utilisateur.getProfil());
-            }
-            utilisateurService.modifierUtilisateur(userCurrentData);
-            redirectAttributes.addFlashAttribute("modif", "success");
+        Utilisateur userCurrentData = utilisateurService.afficherUtilisateur(id);
+        if (!Objects.equals(userCurrentData.getIdentifiantConnexion(), utilisateur.getIdentifiantConnexion())  && utilisateur.getIdentifiantConnexion() != null) {
+            userCurrentData.setIdentifiantConnexion(utilisateur.getIdentifiantConnexion());
         }
-        catch (Exception e){
-            redirectAttributes.addFlashAttribute("modif", "error");
+        if (!Objects.equals(userCurrentData.getPrenom(), utilisateur.getPrenom()) && utilisateur.getPrenom() != null) {
+            userCurrentData.setPrenom(utilisateur.getPrenom());
         }
+        if (!Objects.equals(userCurrentData.getProfil(), utilisateur.getProfil())  && utilisateur.getProfil() != null) {
+            userCurrentData.setProfil(utilisateur.getProfil());
+        }
+        utilisateurService.modifierUtilisateur(userCurrentData);
+        redirectAttributes.addFlashAttribute("modif", "success");
 
         return "redirect:/utilisateurs/admin";
     }

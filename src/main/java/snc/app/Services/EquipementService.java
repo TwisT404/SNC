@@ -1,9 +1,9 @@
 package snc.app.Services;
 
 import org.springframework.stereotype.Service;
+import snc.app.Exception.RessourceIntrouvableException;
 import snc.app.Model.Equipement;
 import snc.app.Repository.EquipementRepository;
-import snc.app.Repository.StationRepository;
 
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class EquipementService {
     }
 
     public Equipement afficherEquipement(int id) {
-        return equipementRepository.getReferenceById(id);
+        return equipementRepository.findById(id)
+                .orElseThrow(() -> new RessourceIntrouvableException("L'équipement demandé n'existe pas."));
     }
 }
