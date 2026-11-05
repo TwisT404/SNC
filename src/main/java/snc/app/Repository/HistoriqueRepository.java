@@ -7,6 +7,4 @@ import snc.app.Model.Historique;
 import java.util.List;
 
 public interface HistoriqueRepository extends JpaRepository<Historique, Integer> {
-    public void ajouterHistorique(Historique historique);
-    public List<Historique> findAllByUtilisateurId(int idUtilisateur);
 }

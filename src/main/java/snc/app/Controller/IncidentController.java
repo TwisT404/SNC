@@ -1,7 +1,6 @@
 package snc.app.Controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,22 +35,14 @@ public class IncidentController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(@RequestParam(required = false) String color, Model model,
-                            Authentication authentication) {
+    public String dashboard(@RequestParam(required = false) String color, Model model) {
         List<Incident> incidentsNonResolus = incidentService.afficherIncidentsNonResolus(color);
         List<Prestataire> prestataires = prestataireService.afficherPrestataires();
         model.addAttribute("incidents_non_resolus", incidentsNonResolus);
         model.addAttribute("prestataires", prestataires);
         model.addAttribute("maintenant", Instant.now());
         model.addAttribute("evaluation", new Evaluation());
-        model.addAttribute("peutDeclarerOuAffecter", possedeUnDesProfils(authentication,
-                "ROLE_ADMIN", "ROLE_RESPONSABLE"));
         return "dashboard";
-    }
-
-    private boolean possedeUnDesProfils(Authentication authentication, String... profils) {
-        return authentication.getAuthorities().stream()
-                .anyMatch(authority -> List.of(profils).contains(authority.getAuthority()));
     }
 
     @PostMapping("/dashboard/{id}")
@@ -123,15 +114,12 @@ public class IncidentController {
     }
 
     @GetMapping("/{id}/details")
-    public String details(@PathVariable int id, Model model, Authentication authentication){
+    public String details(@PathVariable int id, Model model){
         Incident incident = incidentService.afficherIncident(id);
         Evaluation eval =  evaluationService.afficherEvaluation(id);
         model.addAttribute("incident", incident);
         model.addAttribute("evaluation", eval);
         model.addAttribute("nouvelleEvaluation", new Evaluation());
-        model.addAttribute("peutEvaluer", authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN")
-                        || authority.getAuthority().equals("ROLE_RESPONSABLE")));
         return "incidents/detail";
     }
 

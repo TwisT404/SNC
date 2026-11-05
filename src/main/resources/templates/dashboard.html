@@ -49,7 +49,7 @@
                         <button class="def-presta">Définir un prestataire</button>
                         <form class="form_ajout" th:action="@{/incidents/dashboard/{id}(id=${incident.id})}" method="post"></form>
                     </th:block>
-                    <th:block th:if="${incident.idPrestataire != null}">
+                    <th:block th:if="${peutResoudreIncident and incident.idPrestataire != null}">
                         <button type="button" onclick="this.nextElementSibling.showModal()">
                             Confirmer la résolution
                         </button>

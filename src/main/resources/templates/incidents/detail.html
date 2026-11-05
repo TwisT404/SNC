@@ -18,11 +18,11 @@
         <p th:if="${evaluationAjoutee == true}">L'évaluation a bien été enregistrée.</p>
         <p th:if="${erreurEvaluation != null}" th:text="${erreurEvaluation}"></p>
         <section>
-            <button id="bouton_modifier">Modifier les informations</button>
+            <button th:if="${peutModifierIncident}" id="bouton_modifier">Modifier les informations</button>
             <a th:href="@{/incidents/historique}" style="margin-left:15px;">Retour</a>
         </section>
         <section th:object="${incident}">
-            <div>
+            <div th:if="${peutModifierIncident}">
                 <h2>Description : </h2>
                 <p id="description" th:text="${incident.description}"></p>
                 <form id="formDescription" th:action="@{/incidents/{id}/modifier(id=${incident.id})}"

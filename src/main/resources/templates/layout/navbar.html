@@ -30,13 +30,13 @@
                     Équipements
                 </a>
             </li>
-            <li>
+            <li th:if="${peutVoirJournalActions}">
                 <a th:href="@{/historique}" class="nav-link-snc">
                     <i class="bi bi-pc-display"></i>
                     Historique
                 </a>
             </li>
-            <li>
+            <li th:if="${peutAdministrer}">
                 <a th:href="@{/utilisateurs/admin}" class="nav-link-snc">
                     <i class="bi bi-people"></i>
                     Administrateurs

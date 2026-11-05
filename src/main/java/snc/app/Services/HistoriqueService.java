@@ -49,4 +49,8 @@ public class HistoriqueService {
         historique.setDateAction(Instant.now());
         historiqueRepository.save(historique);
     }
+
+    public List<Historique> afficherHistoriques() {
+        return historiqueRepository.findAll();
+    }
 }
