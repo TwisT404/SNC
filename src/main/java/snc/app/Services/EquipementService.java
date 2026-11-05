@@ -22,6 +22,6 @@ public class EquipementService {
 
     public Equipement afficherEquipement(int id) {
         return equipementRepository.findById(id)
-                .orElseThrow(() -> new RessourceIntrouvableException("L'équipement demandé n'existe pas."));
+                .orElseThrow(() -> new RessourceIntrouvableException("L'équipement " + id + " n'existe pas."));
     }
 }

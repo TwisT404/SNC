@@ -5,9 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.ErrorResponseException;
+import org.springframework.web.HttpMediaTypeException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -43,6 +48,23 @@ public class GestionnaireExceptions {
     }
 
     @ExceptionHandler({
+            ErrorResponseException.class,
+            HttpMediaTypeException.class,
+            HttpRequestMethodNotSupportedException.class
+    })
+    public ResponseEntity<?> gererErreurHttp(Exception exception, HttpServletRequest requete) {
+        if (!(exception instanceof ErrorResponse erreurHttp)) {
+            return gererErreurInattendue(exception, requete);
+        }
+
+        String message = erreurHttp.getBody().getDetail();
+        if (message == null || message.isBlank()) {
+            message = "La requête n'a pas pu être traitée.";
+        }
+        return creerReponse(erreurHttp.getStatusCode(), message, requete);
+    }
+
+    @ExceptionHandler({
             MissingServletRequestParameterException.class,
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class,
@@ -58,7 +80,7 @@ public class GestionnaireExceptions {
         return creerReponse(HttpStatus.INTERNAL_SERVER_ERROR, MESSAGE_ERREUR_INATTENDUE, requete);
     }
 
-    private ResponseEntity<?> creerReponse(HttpStatus statut, String message, HttpServletRequest requete) {
+    private ResponseEntity<?> creerReponse(HttpStatusCode statut, String message, HttpServletRequest requete) {
         if (requete.getRequestURI().startsWith("/api/")) {
             return ResponseEntity.status(statut)
                     .contentType(MediaType.APPLICATION_JSON)

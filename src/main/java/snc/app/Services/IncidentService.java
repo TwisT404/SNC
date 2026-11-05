@@ -34,7 +34,7 @@ public class IncidentService {
 
     public Incident afficherIncident(int id){
         return incidentRepository.findById(id)
-                .orElseThrow(() -> new RessourceIntrouvableException("L'incident demandé n'existe pas."));
+                .orElseThrow(() -> new RessourceIntrouvableException("L'incident " + id + " n'existe pas."));
     }
 
     public List<Incident> afficherIncidentsProvenantDeEquipement(int id) {

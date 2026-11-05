@@ -1,11 +1,9 @@
 package snc.app.Controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import snc.app.Exception.RessourceIntrouvableException;
 import snc.app.Model.Equipement;
@@ -64,35 +62,19 @@ public class IncidentController {
             throw new RessourceIntrouvableException("Le prestataire sélectionné n'existe pas.");
         }
         Prestataire prestataire = prestataires.get(idPrestataire);
-        try {
-            Incident incident = incidentService.afficherIncident(id);
-            if(incident == null){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "L'incident " + id + " n'existe pas");
-            }
-            Prestataire prestataire = prestataireService.afficherPrestataires().get(idPrestataire);
-
-            incidentService.modifierIncident(incident,"Affecté", prestataire);
-            redirectAttributes.addFlashAttribute("add_presta_incident", true);
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("add_presta_incident", false);
-            throw new RuntimeException(e);
-        }
+        incidentService.modifierIncident(incident, "Affecté", prestataire);
+        redirectAttributes.addFlashAttribute("add_presta_incident", true);
 
         return  "redirect:/incidents/dashboard";
     }
 
     @GetMapping("/declarer")
     public String declarer(Model model){
-        try {
-            List<Equipement> equipements = equipementService.afficherEquipements();
-            List<Prestataire> prestataires = prestataireService.afficherPrestataires();
-            model.addAttribute("incident", new Incident());
-            model.addAttribute("equipements", equipements);
-            model.addAttribute("prestataires", prestataires);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        List<Equipement> equipements = equipementService.afficherEquipements();
+        List<Prestataire> prestataires = prestataireService.afficherPrestataires();
+        model.addAttribute("incident", new Incident());
+        model.addAttribute("equipements", equipements);
+        model.addAttribute("prestataires", prestataires);
         return "incidents/declarer";
     }
 
@@ -122,10 +104,6 @@ public class IncidentController {
     @GetMapping("/{id}/details")
     public String details(@PathVariable int id, Model model, Authentication authentication){
         Incident incident = incidentService.afficherIncident(id);
-        if (incident == null) {
-            model.addAttribute("incident_exist",false);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "L'incident " + id + " n'existe pas");
-        }
         Evaluation eval =  evaluationService.afficherEvaluation(id);
         model.addAttribute("incident", incident);
         model.addAttribute("evaluation", eval);
