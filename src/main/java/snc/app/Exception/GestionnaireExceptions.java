@@ -28,8 +28,12 @@ public class GestionnaireExceptions {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> gererConflitBaseDeDonnees(HttpServletRequest requete) {
+    public ResponseEntity<?> gererConflitBaseDeDonnees(
+            DataIntegrityViolationException exception,
+            HttpServletRequest requete
+    ) {
         String message = "L'opération est impossible car ces données existent déjà ou sont utilisées.";
+        LOGGER.warn("Conflit de données pendant {} {}", requete.getMethod(), requete.getRequestURI(), exception);
         return creerReponse(HttpStatus.CONFLICT, message, requete);
     }
 
@@ -60,6 +64,7 @@ public class GestionnaireExceptions {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new ReponseErreur(message));
         }
+
         return ResponseEntity.status(statut)
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(message);

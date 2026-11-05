@@ -10,6 +10,11 @@ public abstract class ErreurMetierException extends RuntimeException {
         this.statutHttp = statutHttp;
     }
 
+    protected ErreurMetierException(String message, HttpStatus statutHttp, Throwable cause) {
+        super(message, cause);
+        this.statutHttp = statutHttp;
+    }
+
     public HttpStatus getStatutHttp() {
         return statutHttp;
     }

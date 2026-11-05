@@ -6,4 +6,8 @@ public class DonneeInvalideException extends ErreurMetierException {
     public DonneeInvalideException(String message) {
         super(message, HttpStatus.BAD_REQUEST);
     }
+
+    public DonneeInvalideException(String message, Throwable cause) {
+        super(message, HttpStatus.BAD_REQUEST, cause);
+    }
 }
