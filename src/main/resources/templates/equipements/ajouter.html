@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ajouter un équipement</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/styles/layout/navbar.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/footer.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/common.css}">
+</head>
+<body>
+<div th:insert="layout/navbar::navbar"></div>
+<main>
+    <h1>Ajouter un équipement</h1>
+    <a th:href="@{/equipements}">Retour aux équipements</a>
+    <form th:action="@{/equipements/ajouter}" method="post">
+        <p th:if="${erreurAjoutEquipement != null}" class="message-erreur"
+           role="alert" th:text="${erreurAjoutEquipement}"></p>
+        <div>
+            <label for="referenceUnique">Référence unique :</label>
+            <input id="referenceUnique" name="referenceUnique" type="text" maxlength="100"
+                   th:value="${equipement.referenceUnique}" required>
+        </div>
+        <div>
+            <label for="libelle">Libellé :</label>
+            <input id="libelle" name="libelle" type="text"
+                   th:value="${equipement.libelle}" required>
+        </div>
+        <div>
+            <label for="type">Type :</label>
+            <input id="type" name="type" type="text" maxlength="50"
+                   th:value="${equipement.type}" required>
+        </div>
+        <div>
+            <label for="etatFonctionnement">État de fonctionnement :</label>
+            <input id="etatFonctionnement" name="etatFonctionnement" type="text" maxlength="50"
+                   th:value="${equipement.etatFonctionnement}" required>
+        </div>
+        <div>
+            <label for="stationId">Station :</label>
+            <select id="stationId" name="stationId" required>
+                <option value="" disabled th:selected="${stationId == null}">Choisir une station</option>
+                <option th:each="station : ${stations}"
+                        th:value="${station.id}"
+                        th:text="${station.nom}"
+                        th:selected="${stationId != null and station.id == stationId}"></option>
+            </select>
+        </div>
+        <button type="submit">Ajouter l'équipement</button>
+    </form>
+</main>
+<div th:insert="layout/footer::footer"></div>
+</body>
+</html>

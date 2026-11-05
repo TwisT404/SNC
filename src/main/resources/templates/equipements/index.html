@@ -13,6 +13,8 @@
 <div th:insert="layout/navbar::navbar"></div>
 <main>
     <h1>Équipements</h1>
+    <p th:if="${ajoutEquipement}" role="status">L'équipement a été ajouté.</p>
+    <a th:if="${peutAjouterEquipement}" th:href="@{/equipements/ajouter}">Ajouter un équipement</a>
     <div class="filtre">
         <label for="filtreStation">Station :</label>
         <select id="filtreStation">

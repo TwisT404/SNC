@@ -129,6 +129,8 @@ public class ConfigurationSecurite {
                         .requestMatchers(HttpMethod.GET,
                                 "/incidents/dashboard", "/incidents/historique", "/incidents/*/details")
                         .hasAnyRole("ADMIN", "RESPONSABLE", "CHARGE")
+                        .requestMatchers("/equipements/ajouter")
+                        .hasAnyRole("ADMIN", "RESPONSABLE")
                         .requestMatchers("/equipements/**", "/Station/**", "/dashboard")
                         .hasAnyRole("ADMIN", "RESPONSABLE", "CHARGE")
                         .requestMatchers("/api/**").hasAnyRole("ADMIN", "RESPONSABLE", "CHARGE")
