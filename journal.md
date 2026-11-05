@@ -6,7 +6,7 @@
 - Initialiser la base en local : 'db/createBase.sql' et 'db/createData.sql'(Une pour créer les tables et l'autre pour l'alimenter)
 - Initialiser la base hébergée : les informations sont dans application.properties pour configurer
 - Lancer : "mvn spring-boot:run"
-- Application déployée : https://
+- Application déployée : [https://](https://snc-8biw.onrender.com)
 - Comptes de test :
 - Limites connues :
 
@@ -50,11 +50,11 @@
 ## LOT ALPHA
 ### Fonctionnalité transverse 1 : …
 - Besoin : Journal métier
-- Périmètre envisagé : 
-- Choix et essais : 
-- Ce qui fonctionne :
-- Difficultés :
-- Reste à faire :
+- Périmètre envisagé : Incidents
+- Choix et essais : Ajout, Modifications des incidents par les utilisateurs
+- Ce qui fonctionne : AJout, Modifications
+- Difficultés : Récupérer l'id de l'utilisateur dans le token
+- Reste à faire : L'implémenter dans les autres controllers
   
 ### Fonctionnalité transverse 2 : …
 - Besoin : Supervision avancée
@@ -81,7 +81,9 @@
     - Cédric : Mise en place de l'évaluation suite à une résolution -> Proposer 3 options : Résoudre avec évaluation, résoudre sans évaluation et retour sans résolution
     - Léonardo : Mettre en place l'authentification  JWT et de faire fonctionner avec les rôles ->Créer un token à la connexion puis protéger les bonnes pages et actions selon le profil
       
-- Fonctionnalités non réalisées et pourquoi : …
+- Fonctionnalités non réalisées et pourquoi : 
+  - Les suppresions : manque de temps
+
   
 - Trois points à retenir du cours et du projet : …
   - L'importance des gestions d'erreur
