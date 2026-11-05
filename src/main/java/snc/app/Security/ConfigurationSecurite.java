@@ -2,10 +2,12 @@ package snc.app.Security;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -107,7 +109,7 @@ public class ConfigurationSecurite {
                 .authorizeHttpRequests(authorization -> authorization
                         .requestMatchers("/styles/**", "/img/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/connexion").permitAll()
-                        .requestMatchers("/", "/login", "/utilisateurs/", "/error").permitAll()
+                        .requestMatchers("/", "/login", "/utilisateurs/", "/error", "/erreur/403").permitAll()
                         .requestMatchers(HttpMethod.POST, "/utilisateurs/login", "/logout").permitAll()
                         .requestMatchers("/utilisateurs/admin/**").hasRole("ADMIN")
                         .requestMatchers("/Prestataire/**", "/evaluation/**")
@@ -131,6 +133,18 @@ public class ConfigurationSecurite {
                         .hasAnyRole("ADMIN", "RESPONSABLE", "CHARGE")
                         .requestMatchers("/api/**").hasAnyRole("ADMIN", "RESPONSABLE", "CHARGE")
                         .anyRequest().denyAll())
+                .exceptionHandling(exceptions -> exceptions.accessDeniedHandler((request, response, denied) -> {
+                    if (request.getServletPath().startsWith("/api/")) {
+                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                        response.getWriter().write("{\"message\":\"Accès refusé.\"}");
+                        return;
+                    }
+
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    request.getRequestDispatcher("/erreur/403").forward(request, response);
+                }))
                 .oauth2ResourceServer(resourceServer -> resourceServer
                         .bearerTokenResolver(bearerTokenResolver)
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(convertisseurJwt)))

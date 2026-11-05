@@ -15,23 +15,49 @@
     <main>
         <h1>Déclarer un incident :</h1>
         <a th:href="@{/incidents/dashboard}">Retour</a>
-        <form th:action="@{/incidents/declarer/envoie}" th:object="${incident}" method="post">
+        <form id="form-declaration" th:action="@{/incidents/declarer/envoie}"
+              th:object="${incident}" method="post">
             <div>
-                <label>Equipement concerné :</label>
-                <select name="equipement_concern" id="equipement_concern" th:field="*{idEquipement}">
+                <label for="equipement_concern">Équipement concerné :</label>
+                <select id="equipement_concern" th:field="*{idEquipement}" required
+                        aria-describedby="erreur-declaration">
+                    <option value="" disabled>Choisir un équipement</option>
                     <option th:each="equipement : ${equipements}"
                             th:value="${equipement.id}"
-                            th:text="${equipement.libelle}">
-                    </option>
+                            th:text="${equipement.libelle}"></option>
                 </select>
             </div>
             <div>
-                <label>Description :</label>
-                <textarea name="description" id="description" cols="30" rows="10" th:field="*{description}"></textarea>
+                <label for="description">Description :</label>
+                <textarea id="description" cols="30" rows="10" th:field="*{description}"
+                          aria-required="true" aria-describedby="erreur-declaration"></textarea>
             </div>
+            <p id="erreur-declaration" class="message-erreur" role="alert" aria-live="polite"
+               th:hidden="${erreur_declaration == null}"
+               th:text="${erreur_declaration}"></p>
             <button type="submit">Ajouter l'incident</button>
         </form>
     </main>
     <div th:insert="layout/footer::footer"></div>
+    <script>
+        const formulaire = document.getElementById('form-declaration');
+        const description = document.getElementById('description');
+        const messageErreur = document.getElementById('erreur-declaration');
+
+        formulaire.addEventListener('submit', (event) => {
+            if (!description.value.trim()) {
+                event.preventDefault();
+                messageErreur.textContent = 'La description de l’incident est obligatoire.';
+                messageErreur.hidden = false;
+                description.focus();
+            }
+        });
+
+        description.addEventListener('input', () => {
+            if (description.value.trim()) {
+                messageErreur.hidden = true;
+            }
+        });
+    </script>
 </body>
 </html>

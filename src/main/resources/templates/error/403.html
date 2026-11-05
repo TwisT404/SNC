@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Accès refusé - SNC</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/styles/layout/navbar.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/common.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/footer.css}">
+</head>
+<body>
+<div th:insert="layout/navbar::navbar"></div>
+<main>
+    <section>
+        <h1>Accès refusé</h1>
+        <p th:text="${message}">Vous n'avez pas les droits nécessaires pour accéder à cette page.</p>
+        <a th:href="@{/incidents/dashboard}">Retour au tableau de bord</a>
+    </section>
+</main>
+<div th:insert="layout/footer::footer"></div>
+</body>
+</html>

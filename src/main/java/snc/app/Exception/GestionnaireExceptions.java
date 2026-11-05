@@ -18,6 +18,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
@@ -28,12 +29,12 @@ public class GestionnaireExceptions {
             "Une erreur inattendue s'est produite. Veuillez réessayer.";
 
     @ExceptionHandler(ErreurMetierException.class)
-    public ResponseEntity<?> gererErreurMetier(ErreurMetierException exception, HttpServletRequest requete) {
+    public Object gererErreurMetier(ErreurMetierException exception, HttpServletRequest requete) {
         return creerReponse(exception.getStatutHttp(), exception.getMessage(), requete);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> gererConflitBaseDeDonnees(
+    public Object gererConflitBaseDeDonnees(
             DataIntegrityViolationException exception,
             HttpServletRequest requete
     ) {
@@ -43,7 +44,7 @@ public class GestionnaireExceptions {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<?> gererRouteIntrouvable(HttpServletRequest requete) {
+    public Object gererRouteIntrouvable(HttpServletRequest requete) {
         return creerReponse(HttpStatus.NOT_FOUND, "La page demandée n'existe pas.", requete);
     }
 
@@ -52,7 +53,7 @@ public class GestionnaireExceptions {
             HttpMediaTypeException.class,
             HttpRequestMethodNotSupportedException.class
     })
-    public ResponseEntity<?> gererErreurHttp(Exception exception, HttpServletRequest requete) {
+    public Object gererErreurHttp(Exception exception, HttpServletRequest requete) {
         if (!(exception instanceof ErrorResponse erreurHttp)) {
             return gererErreurInattendue(exception, requete);
         }
@@ -70,26 +71,28 @@ public class GestionnaireExceptions {
             HttpMessageNotReadableException.class,
             BindException.class
     })
-    public ResponseEntity<?> gererDonneesDeRequeteInvalides(HttpServletRequest requete) {
+    public Object gererDonneesDeRequeteInvalides(HttpServletRequest requete) {
         return creerReponse(HttpStatus.BAD_REQUEST, MESSAGE_DONNEES_INVALIDES, requete);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> gererErreurInattendue(Exception exception, HttpServletRequest requete) {
+    public Object gererErreurInattendue(Exception exception, HttpServletRequest requete) {
         LOGGER.error("Erreur inattendue pour {} {}", requete.getMethod(), requete.getRequestURI(), exception);
         return creerReponse(HttpStatus.INTERNAL_SERVER_ERROR, MESSAGE_ERREUR_INATTENDUE, requete);
     }
 
-    private ResponseEntity<?> creerReponse(HttpStatusCode statut, String message, HttpServletRequest requete) {
+    private Object creerReponse(HttpStatusCode statut, String message, HttpServletRequest requete) {
         if (requete.getRequestURI().startsWith("/api/")) {
             return ResponseEntity.status(statut)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new ReponseErreur(message));
         }
 
-        return ResponseEntity.status(statut)
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(message);
+        boolean introuvable = statut.value() == HttpStatus.NOT_FOUND.value();
+        ModelAndView modeleEtVue = new ModelAndView(introuvable ? "error/404" : "error/erreur");
+        modeleEtVue.setStatus(statut);
+        modeleEtVue.addObject("message", message);
+        return modeleEtVue;
     }
 
     public record ReponseErreur(String message) {

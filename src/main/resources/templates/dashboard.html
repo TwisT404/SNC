@@ -18,8 +18,11 @@
             <p th:if="${ajout_incident == true}">L'incident a bien été ajouté!</p>
             <p th:if="${ajout_incident == false}" >"Erreur → Problème lors de l'ajout de l'incident !</p>
             <p th:if="${resolution == true}">L'incident est bien résolu !</p>
-            <p th:if="${erreur_resolution != null}" th:text="${erreur_resolution}"></p>
+            <p th:if="${erreur_resolution != null}" class="message-erreur"
+               role="alert" th:text="${erreur_resolution}"></p>
             <p th:if="${add_presta_incident == true}">Le prestataire a bien été ajouté à l'incident !</p>
+            <p th:if="${erreur_affectation != null}" class="message-erreur"
+               role="alert" th:text="${erreur_affectation}"></p>
         </div>
 
         <h1>Tableau de bord des incidents non résolus :</h1>

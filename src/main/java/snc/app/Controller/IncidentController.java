@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import snc.app.Exception.ErreurMetierException;
 import snc.app.Exception.RessourceIntrouvableException;
 import snc.app.Model.Equipement;
 import snc.app.Model.Evaluation;
@@ -56,42 +57,60 @@ public class IncidentController {
     @PostMapping("/dashboard/{id}")
     public String ajoutePrestataire(@PathVariable int id, @RequestParam("idPrestataire") int idPrestataire, RedirectAttributes redirectAttributes)
     {
-        Incident incident = incidentService.afficherIncident(id);
-        List<Prestataire> prestataires = prestataireService.afficherPrestataires();
-        if (idPrestataire < 0 || idPrestataire >= prestataires.size()) {
-            throw new RessourceIntrouvableException("Le prestataire sélectionné n'existe pas.");
+        try {
+            Incident incident = incidentService.afficherIncident(id);
+            List<Prestataire> prestataires = prestataireService.afficherPrestataires();
+            if (idPrestataire < 0 || idPrestataire >= prestataires.size()) {
+                throw new RessourceIntrouvableException("Le prestataire sélectionné n'existe pas.");
+            }
+            incidentService.modifierIncident(incident, "Affecté", prestataires.get(idPrestataire));
+            redirectAttributes.addFlashAttribute("add_presta_incident", true);
+        } catch (ErreurMetierException exception) {
+            redirectAttributes.addFlashAttribute("erreur_affectation", exception.getMessage());
         }
-        Prestataire prestataire = prestataires.get(idPrestataire);
-        incidentService.modifierIncident(incident, "Affecté", prestataire);
-        redirectAttributes.addFlashAttribute("add_presta_incident", true);
 
-        return  "redirect:/incidents/dashboard";
+        return "redirect:/incidents/dashboard";
     }
 
     @GetMapping("/declarer")
     public String declarer(Model model){
-        List<Equipement> equipements = equipementService.afficherEquipements();
-        List<Prestataire> prestataires = prestataireService.afficherPrestataires();
-        model.addAttribute("incident", new Incident());
-        model.addAttribute("equipements", equipements);
-        model.addAttribute("prestataires", prestataires);
-        return "incidents/declarer";
+        if (!model.containsAttribute("incident")) {
+            model.addAttribute("incident", new Incident());
+        }
+        return afficherFormulaireDeclaration(model);
     }
 
     @PostMapping("/declarer/envoie")
-    public String declarerEnvoie(@ModelAttribute("incident") Incident incident, RedirectAttributes redirectAttributes){
+    public String declarerEnvoie(@ModelAttribute("incident") Incident incident, Model model,
+                                 RedirectAttributes redirectAttributes) {
         incident.setStatut("Non Résolu");
         incident.setDateOuverture(Instant.now());
-        incidentService.ajouterIncident(incident);
-        redirectAttributes.addFlashAttribute("ajout_incident",true);
-        return  "redirect:/incidents/dashboard";
+        try {
+            incidentService.ajouterIncident(incident);
+            redirectAttributes.addFlashAttribute("ajout_incident", true);
+            return "redirect:/incidents/dashboard";
+        } catch (ErreurMetierException erreur) {
+            model.addAttribute("incident", incident);
+            model.addAttribute("erreur_declaration", erreur.getMessage());
+            return afficherFormulaireDeclaration(model);
+        }
+    }
+
+    private String afficherFormulaireDeclaration(Model model) {
+        model.addAttribute("equipements", equipementService.afficherEquipements());
+        return "incidents/declarer";
     }
 
     @PostMapping("dashboard/{id}/resolution")
     public String resolution(@PathVariable int id, RedirectAttributes redirectAttributes){
-        incidentService.mettreStatutResolu(id);
-        redirectAttributes.addFlashAttribute("resolution",true);
-        return "redirect:/incidents/" + id + "/details";
+        try {
+            incidentService.mettreStatutResolu(id);
+            redirectAttributes.addFlashAttribute("resolution", true);
+            return "redirect:/incidents/" + id + "/details";
+        } catch (ErreurMetierException exception) {
+            redirectAttributes.addFlashAttribute("erreur_resolution", exception.getMessage());
+            return "redirect:/incidents/dashboard";
+        }
     }
 
     @GetMapping("/historique")
@@ -107,7 +126,9 @@ public class IncidentController {
         Evaluation eval =  evaluationService.afficherEvaluation(id);
         model.addAttribute("incident", incident);
         model.addAttribute("evaluation", eval);
-        model.addAttribute("nouvelleEvaluation", new Evaluation());
+        if (!model.containsAttribute("nouvelleEvaluation")) {
+            model.addAttribute("nouvelleEvaluation", new Evaluation());
+        }
         model.addAttribute("peutEvaluer", authentication.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN")
                         || authority.getAuthority().equals("ROLE_RESPONSABLE")));
@@ -117,16 +138,26 @@ public class IncidentController {
     @PostMapping("/{id}/evaluation")
     public String evaluerIncident(@PathVariable int id, @ModelAttribute Evaluation evaluation,
                                   RedirectAttributes redirectAttributes) {
-        evaluationService.ajouterEvaluation(id, evaluation);
-        redirectAttributes.addFlashAttribute("evaluationAjoutee", true);
+        try {
+            evaluationService.ajouterEvaluation(id, evaluation);
+            redirectAttributes.addFlashAttribute("evaluationAjoutee", true);
+        } catch (ErreurMetierException exception) {
+            redirectAttributes.addFlashAttribute("erreurEvaluation", exception.getMessage());
+            redirectAttributes.addFlashAttribute("nouvelleEvaluation", evaluation);
+        }
         return "redirect:/incidents/" + id + "/details";
     }
 
     @PostMapping("/{id}/modifier")
-    public String modifierIncident(@PathVariable int id,@RequestParam String description){
-        incidentService.modifierDescriptionIncident(id, description);
-        return "redirect:/incidents/"+id+"/details";
-
+    public String modifierIncident(@PathVariable int id, @RequestParam String description,
+                                   RedirectAttributes redirectAttributes) {
+        try {
+            incidentService.modifierDescriptionIncident(id, description);
+        } catch (ErreurMetierException exception) {
+            redirectAttributes.addFlashAttribute("erreurModification", exception.getMessage());
+            redirectAttributes.addFlashAttribute("descriptionSaisie", description);
+        }
+        return "redirect:/incidents/" + id + "/details";
     }
 
 }
