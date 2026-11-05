@@ -18,4 +18,8 @@ public class PrestataireService {
     public List<Prestataire> afficherPrestataires() {
         return prestataireRepository.findAll();
     }
+
+    public void ajouterPrestataire(Prestataire prestataire) {
+        prestataireRepository.save(prestataire);
+    }
 }
