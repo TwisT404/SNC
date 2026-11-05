@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historique des actions</title>
+    <link rel="stylesheet" th:href="@{/styles/historique.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/navbar.css}">
+    <link rel="stylesheet" th:href="@{/styles/layout/footer.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<div th:insert="layout/navbar::navbar"></div>
+
+<main class="container">
+    <h1>Historique des actions</h1>
+
+    <section class="card">
+        <h2 class="section-title">Journal des actions :</h2>
+
+        <div class="actions">
+            <a class="btn" th:href="@{/dashboard}">← Retour au tableau de bord</a>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Utilisateur</th>
+                    <th>Action</th>
+                    <th>Entité concernée</th>
+                    <th>Date de l'action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="h : ${historiques}">
+                    <td th:text="${h.id}">1</td>
+                    <td th:text="${h.utilisateurId}">12</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${#strings.toLowerCase(h.action) == 'creation' ? 'badge-creation'
+                                             : (#strings.toLowerCase(h.action) == 'modification' ? 'badge-modification'
+                                             : (#strings.toLowerCase(h.action) == 'suppression' ? 'badge-suppression' : ''))}"
+                              th:text="${h.action}">CREATION</span>
+                    </td>
+                    <td th:text="${h.entiteConcerne}">Incident</td>
+                    <td th:text="${#temporals.format(h.dateAction, 'dd/MM/yyyy HH:mm')}">01/01/2025 10:30</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(historiques)}">
+                    <td colspan="5" class="vide">Aucun historique à afficher.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<div th:insert="layout/footer::footer"></div>
+</body>
+</html>

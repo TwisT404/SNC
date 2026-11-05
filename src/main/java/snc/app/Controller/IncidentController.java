@@ -7,14 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import snc.app.Exception.ErreurMetierException;
 import snc.app.Exception.RessourceIntrouvableException;
-import snc.app.Model.Equipement;
 import snc.app.Model.Evaluation;
 import snc.app.Model.Incident;
 import snc.app.Model.Prestataire;
-import snc.app.Services.EquipementService;
-import snc.app.Services.EvaluationService;
-import snc.app.Services.IncidentService;
-import snc.app.Services.PrestataireService;
+import snc.app.Services.*;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,12 +23,14 @@ public class IncidentController {
     private final EquipementService  equipementService;
     private final PrestataireService prestataireService;
     private final EvaluationService evaluationService;
+    private final HistoriqueService historiqueService;
 
-    public IncidentController(IncidentService incidentService, EquipementService equipementService, PrestataireService prestataireService, EvaluationService evaluationService) {
+    public IncidentController(IncidentService incidentService, EquipementService equipementService, PrestataireService prestataireService, EvaluationService evaluationService, HistoriqueService historiqueService) {
         this.incidentService = incidentService;
         this.equipementService = equipementService;
         this.prestataireService = prestataireService;
         this.evaluationService = evaluationService;
+        this.historiqueService = historiqueService;
     }
 
     @GetMapping("/dashboard")
@@ -65,6 +63,7 @@ public class IncidentController {
             }
             incidentService.modifierIncident(incident, "Affecté", prestataires.get(idPrestataire));
             redirectAttributes.addFlashAttribute("add_presta_incident", true);
+            historiqueService.ajouterHistorique("Ajout Prestataire", "Incident");
         } catch (ErreurMetierException exception) {
             redirectAttributes.addFlashAttribute("erreur_affectation", exception.getMessage());
         }
@@ -153,6 +152,7 @@ public class IncidentController {
                                    RedirectAttributes redirectAttributes) {
         try {
             incidentService.modifierDescriptionIncident(id, description);
+            historiqueService.ajouterHistorique("Modifier Incident", "Incident");
         } catch (ErreurMetierException exception) {
             redirectAttributes.addFlashAttribute("erreurModification", exception.getMessage());
             redirectAttributes.addFlashAttribute("descriptionSaisie", description);

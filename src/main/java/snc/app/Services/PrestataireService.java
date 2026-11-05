@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class PrestataireService {
 
-    private PrestataireRepository prestataireRepository;
+    private final PrestataireRepository prestataireRepository;
 
     public PrestataireService(PrestataireRepository prestataireRepository) {
         this.prestataireRepository = prestataireRepository;
@@ -17,5 +17,9 @@ public class PrestataireService {
 
     public List<Prestataire> afficherPrestataires() {
         return prestataireRepository.findAll();
+    }
+
+    public void ajouterPrestataire(Prestataire prestataire) {
+        prestataireRepository.save(prestataire);
     }
 }

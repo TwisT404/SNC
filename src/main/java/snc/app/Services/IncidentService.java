@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import snc.app.Exception.DonneeInvalideException;
 import snc.app.Exception.RessourceIntrouvableException;
 import snc.app.Exception.TransitionEtatInterditeException;
-import snc.app.Model.Equipement;
 import snc.app.Model.Incident;
 import snc.app.Model.Prestataire;
 import snc.app.Repository.EquipementRepository;
