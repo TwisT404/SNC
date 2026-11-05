@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class PrestataireService {
 
-    private PrestataireRepository prestataireRepository;
+    private final PrestataireRepository prestataireRepository;
 
     public PrestataireService(PrestataireRepository prestataireRepository) {
         this.prestataireRepository = prestataireRepository;
