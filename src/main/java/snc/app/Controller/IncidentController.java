@@ -100,7 +100,7 @@ public class IncidentController {
         try {
             incidentService.ajouterIncident(incident);
             redirectAttributes.addFlashAttribute("ajout_incident",true);
-
+            historiqueService.ajouterHistorique("Ajout Incident", "Incident");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("ajout_incident", false);
             throw new RuntimeException(e);
