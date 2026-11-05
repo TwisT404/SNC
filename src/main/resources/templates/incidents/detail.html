@@ -19,7 +19,7 @@
         <p th:if="${erreurEvaluation != null}" th:text="${erreurEvaluation}"></p>
         <section>
             <button th:if="${peutModifierIncident}" id="bouton_modifier">Modifier les informations</button>
-            <a th:href="@{/incidents/historique}" style="margin-left:15px;">Retour</a>
+            <a onclick="history.back()" style="margin-left:15px;">Retour</a>
         </section>
         <section th:object="${incident}">
             <div th:if="${peutModifierIncident}">
