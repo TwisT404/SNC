@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Page introuvable - SNC</title>
+    <link rel="stylesheet" th:href="@{/styles/layout/common.css}">
+</head>
+<body>
+<main>
+    <section>
+        <h1>Page introuvable</h1>
+        <p th:text="${message}">La page demandée n'existe pas.</p>
+        <a th:href="@{/incidents/dashboard}">Retour au tableau de bord</a>
+    </section>
+</main>
+</body>
+</html>

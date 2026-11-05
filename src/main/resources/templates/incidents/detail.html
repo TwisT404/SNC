@@ -16,7 +16,8 @@
         <h1>Incidents :</h1>
         <p th:if="${resolution == true}">L'incident a bien été résolu.</p>
         <p th:if="${evaluationAjoutee == true}">L'évaluation a bien été enregistrée.</p>
-        <p th:if="${erreurEvaluation != null}" th:text="${erreurEvaluation}"></p>
+        <p th:if="${erreurEvaluation != null}" class="message-erreur"
+           role="alert" th:text="${erreurEvaluation}"></p>
         <section>
             <button id="bouton_modifier">Modifier les informations</button>
             <a th:href="@{/incidents/historique}" style="margin-left:15px;">Retour</a>
@@ -24,10 +25,14 @@
         <section th:object="${incident}">
             <div>
                 <h2>Description : </h2>
-                <p id="description" th:text="${incident.description}"></p>
+                <p id="description" th:hidden="${erreurModification != null}" th:text="${incident.description}"></p>
                 <form id="formDescription" th:action="@{/incidents/{id}/modifier(id=${incident.id})}"
-                      method="post" style="display:none;">
-                    <input type="text" name="description" th:placeholder="${incident.description}">
+                      method="post" th:style="${erreurModification != null ? 'display:grid;' : 'display:none;'}">
+                    <p th:if="${erreurModification != null}" class="message-erreur"
+                       role="alert" th:text="${erreurModification}"></p>
+                    <input type="text" name="description"
+                           th:value="${descriptionSaisie != null ? descriptionSaisie : incident.description}"
+                           required>
                     <button type="submit">Valider</button>
                     <button id="refuser" type="button">Annuler</button>
                 </form>
@@ -69,7 +74,7 @@
                 <button type="button" onclick="document.getElementById('dialogue-evaluation').showModal()">
                     Évaluer le prestataire
                 </button>
-                <dialog id="dialogue-evaluation">
+                <dialog id="dialogue-evaluation" th:open="${erreurEvaluation != null}">
                     <form th:action="@{/incidents/{id}/evaluation(id=${incident.id})}"
                           th:object="${nouvelleEvaluation}" method="post">
                         <h2>Évaluer l'intervention</h2>

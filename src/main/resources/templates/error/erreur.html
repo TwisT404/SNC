@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Une erreur s'est produite - SNC</title>
+    <link rel="stylesheet" th:href="@{/styles/layout/common.css}">
+</head>
+<body>
+<main>
+    <section>
+        <h1>Une erreur s'est produite</h1>
+        <p th:text="${message}">La demande n'a pas pu être traitée.</p>
+        <a th:href="@{/incidents/dashboard}">Retour au tableau de bord</a>
+    </section>
+</main>
+</body>
+</html>
