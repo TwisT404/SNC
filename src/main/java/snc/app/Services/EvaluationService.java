@@ -1,6 +1,9 @@
 package snc.app.Services;
 
 import org.springframework.stereotype.Service;
+import snc.app.Exception.DonneeInvalideException;
+import snc.app.Exception.RessourceIntrouvableException;
+import snc.app.Exception.TransitionEtatInterditeException;
 import snc.app.Model.Evaluation;
 import snc.app.Model.Incident;
 import snc.app.Repository.EvaluationRepository;
@@ -19,16 +22,16 @@ public class EvaluationService {
 
     public void ajouterEvaluation(int idIncident, Evaluation evaluation) {
         Incident incident = incidentRepository.findById(idIncident)
-                .orElseThrow(() -> new IllegalArgumentException("L'incident demandé n'existe pas."));
+                .orElseThrow(() -> new RessourceIntrouvableException("L'incident demandé n'existe pas."));
         if (!"Résolu".equals(incident.getStatut())) {
-            throw new IllegalStateException("L'incident doit être résolu avant son évaluation.");
+            throw new TransitionEtatInterditeException("L'incident doit être résolu avant son évaluation.");
         }
         if (evaluationRepository.findByIdIncident_Id(idIncident).isPresent()) {
-            throw new IllegalStateException("Cet incident a déjà été évalué.");
+            throw new TransitionEtatInterditeException("Cet incident a déjà été évalué.");
         }
         if (evaluation == null || evaluation.getNote() == null
                 || evaluation.getNote() < 1 || evaluation.getNote() > 5) {
-            throw new IllegalArgumentException("La note doit être comprise entre 1 et 5.");
+            throw new DonneeInvalideException("La note doit être comprise entre 1 et 5.");
         }
 
         Evaluation eval_to_save = new Evaluation();      // no id, no version -> INSERT

@@ -34,8 +34,7 @@
 |  F10  |        Évaluer un prestataire         |             X              |                    |
 |  F11  |            Tableau de bord            |             X              |         X          |
 
-- Exceptions : @ControllerAdvice ou ResponseStatusException ? Pourquoi ?
-  - @ControllerAdvice -> centraliser le traitement des exceptions 
+- Exceptions : choix de `@ControllerAdvice` pour centraliser la traduction des exceptions métier en codes HTTP. Les ressources absentes renvoient 404, les données invalides 400, et les conflits ou transitions interdites 409. Les erreurs inattendues sont journalisées sans exposer de détails techniques à l'utilisateur.
 - SOLID : principe(s) appliqué(s) (où, pourquoi) ; principes écartés (pourquoi)
   -  Inversion des dépendances
     - Facilite l'appel des fonctions à la DB -> Plus simple pour les tests unitaires

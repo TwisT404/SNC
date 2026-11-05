@@ -2,6 +2,9 @@ package snc.app.Services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import snc.app.Exception.ConflitDonneesException;
+import snc.app.Exception.DonneeInvalideException;
+import snc.app.Exception.RessourceIntrouvableException;
 import snc.app.Model.Utilisateur;
 import snc.app.Repository.UtilisateurRepository;
 
@@ -36,6 +39,10 @@ public class UtilisateurService {
     }
 
     public void ajouterUtilisateur(Utilisateur utilisateur){
+        validerUtilisateur(utilisateur, true);
+        if (utilisateurRepository.findByIdentifiantConnexion(utilisateur.getIdentifiantConnexion()) != null) {
+            throw new ConflitDonneesException("Cet identifiant de connexion est déjà utilisé.");
+        }
         utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
         utilisateurRepository.save(utilisateur);
     }
@@ -45,14 +52,36 @@ public class UtilisateurService {
     }
 
     public void supprimerUtilisateur(int id) {
+        afficherUtilisateur(id);
         utilisateurRepository.deleteById(id);
     }
 
     public Utilisateur afficherUtilisateur(int id){
-        return utilisateurRepository.findById(id).isPresent() ? utilisateurRepository.findById(id).get() : null;
+        return utilisateurRepository.findById(id)
+                .orElseThrow(() -> new RessourceIntrouvableException("L'utilisateur demandé n'existe pas."));
     }
 
     public void modifierUtilisateur(Utilisateur userCurrentData) {
+        validerUtilisateur(userCurrentData, false);
+        Utilisateur utilisateurExistant = utilisateurRepository
+                .findByIdentifiantConnexion(userCurrentData.getIdentifiantConnexion());
+        if (utilisateurExistant != null && !utilisateurExistant.getId().equals(userCurrentData.getId())) {
+            throw new ConflitDonneesException("Cet identifiant de connexion est déjà utilisé.");
+        }
         utilisateurRepository.save(userCurrentData);
+    }
+
+    private void validerUtilisateur(Utilisateur utilisateur, boolean motDePasseObligatoire) {
+        if (utilisateur == null
+                || utilisateur.getIdentifiantConnexion() == null
+                || utilisateur.getIdentifiantConnexion().isBlank()
+                || utilisateur.getPrenom() == null
+                || utilisateur.getPrenom().isBlank()
+                || utilisateur.getProfil() == null
+                || !List.of("admin", "responsable", "charge").contains(utilisateur.getProfil())
+                || (motDePasseObligatoire
+                    && (utilisateur.getMotDePasse() == null || utilisateur.getMotDePasse().isBlank()))) {
+            throw new DonneeInvalideException("Les informations de l'utilisateur sont incomplètes ou invalides.");
+        }
     }
 }

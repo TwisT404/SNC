@@ -2,8 +2,13 @@ package snc.app.Services;
 
 
 import org.springframework.stereotype.Service;
+import snc.app.Exception.DonneeInvalideException;
+import snc.app.Exception.RessourceIntrouvableException;
+import snc.app.Exception.TransitionEtatInterditeException;
+import snc.app.Model.Equipement;
 import snc.app.Model.Incident;
 import snc.app.Model.Prestataire;
+import snc.app.Repository.EquipementRepository;
 import snc.app.Repository.IncidentRepository;
 
 import java.time.Duration;
@@ -19,14 +24,17 @@ import static snc.app.Globals.ROUGE;
 public class IncidentService {
 
     private final IncidentRepository incidentRepository;
+    private final EquipementRepository equipementRepository;
 
-    public IncidentService(IncidentRepository incidentRepository) {
+    public IncidentService(IncidentRepository incidentRepository, EquipementRepository equipementRepository) {
         this.incidentRepository = incidentRepository;
+        this.equipementRepository = equipementRepository;
     }
 
 
     public Incident afficherIncident(int id){
-        return incidentRepository.findById(id).orElse(null);
+        return incidentRepository.findById(id)
+                .orElseThrow(() -> new RessourceIntrouvableException("L'incident " + id + " n'existe pas."));
     }
 
     public List<Incident> afficherIncidentsProvenantDeEquipement(int id) {
@@ -61,10 +69,27 @@ public class IncidentService {
     }
 
     public void ajouterIncident(Incident incident) {
+        if (incident == null
+                || incident.getDescription() == null
+                || incident.getDescription().isBlank()
+                || incident.getIdEquipement() == null
+                || incident.getIdEquipement().getId() == null) {
+            throw new DonneeInvalideException(
+                    "Une description et un équipement sont obligatoires pour déclarer un incident.");
+        }
+        if (!equipementRepository.existsById(incident.getIdEquipement().getId())) {
+            throw new RessourceIntrouvableException("L'équipement sélectionné n'existe pas.");
+        }
         incidentRepository.save(incident);
     }
 
     public void modifierIncident(Incident incident, String statut, Prestataire prestataire) {
+        if (incident == null || prestataire == null) {
+            throw new DonneeInvalideException("Un incident et un prestataire doivent être sélectionnés.");
+        }
+        if ("Résolu".equals(incident.getStatut())) {
+            throw new TransitionEtatInterditeException("Un incident résolu ne peut plus être réaffecté.");
+        }
         incident.setIdPrestataire(prestataire);
         incident.setStatut(statut);
         incidentRepository.save(incident);
@@ -72,12 +97,12 @@ public class IncidentService {
 
     public void mettreStatutResolu(int id) {
         Incident incident = incidentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("L'incident demandé n'existe pas."));
+                .orElseThrow(() -> new RessourceIntrouvableException("L'incident demandé n'existe pas."));
         if (incident.getIdPrestataire() == null) {
-            throw new IllegalStateException("Un prestataire doit être affecté avant la résolution.");
+            throw new TransitionEtatInterditeException("Un prestataire doit être affecté avant la résolution.");
         }
         if ("Résolu".equals(incident.getStatut())) {
-            throw new IllegalStateException("Cet incident est déjà résolu.");
+            throw new TransitionEtatInterditeException("Cet incident est déjà résolu.");
         }
         incident.setStatut("Résolu");
         incident.setDateResolution(Instant.now());
@@ -89,11 +114,10 @@ public class IncidentService {
     }
 
     public void modifierDescriptionIncident(int id, String description) {
-        Incident incident = incidentRepository.findById(id).orElse(null);
-        if(incident == null){
-            throw new RuntimeException("L'incident n'existe pas");
+        if (description == null || description.isBlank()) {
+            throw new DonneeInvalideException("La description de l'incident ne peut pas être vide.");
         }
-
+        Incident incident = afficherIncident(id);
         incident.setDescription(description);
         incidentRepository.save(incident);
     }

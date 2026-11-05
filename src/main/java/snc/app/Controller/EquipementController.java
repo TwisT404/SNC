@@ -1,12 +1,10 @@
 package snc.app.Controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
 import snc.app.Model.Equipement;
 import snc.app.Model.Incident;
 import snc.app.Model.Station;
@@ -44,9 +42,6 @@ public class EquipementController {
     public String GetDetails(@PathVariable int id, Model model){
 
         Equipement equipement = equipementService.afficherEquipement(id);
-        if (equipement == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "L'équipement " + id + " n'existe pas");
-        }
         List<Incident> incidents = incidentService.afficherIncidentsProvenantDeEquipement(equipement.getId());
 
         model.addAttribute("incidents", incidents);

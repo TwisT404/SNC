@@ -1,12 +1,11 @@
 package snc.app.Controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import snc.app.Exception.RessourceIntrouvableException;
 import snc.app.Model.Equipement;
 import snc.app.Model.Evaluation;
 import snc.app.Model.Incident;
@@ -57,35 +56,25 @@ public class IncidentController {
     @PostMapping("/dashboard/{id}")
     public String ajoutePrestataire(@PathVariable int id, @RequestParam("idPrestataire") int idPrestataire, RedirectAttributes redirectAttributes)
     {
-        try {
-            Incident incident = incidentService.afficherIncident(id);
-            if(incident == null){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "L'incident " + id + " n'existe pas");
-            }
-            Prestataire prestataire = prestataireService.afficherPrestataires().get(idPrestataire);
-
-            incidentService.modifierIncident(incident,"Affecté", prestataire);
-            redirectAttributes.addFlashAttribute("add_presta_incident", true);
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("add_presta_incident", false);
-            throw new RuntimeException(e);
+        Incident incident = incidentService.afficherIncident(id);
+        List<Prestataire> prestataires = prestataireService.afficherPrestataires();
+        if (idPrestataire < 0 || idPrestataire >= prestataires.size()) {
+            throw new RessourceIntrouvableException("Le prestataire sélectionné n'existe pas.");
         }
+        Prestataire prestataire = prestataires.get(idPrestataire);
+        incidentService.modifierIncident(incident, "Affecté", prestataire);
+        redirectAttributes.addFlashAttribute("add_presta_incident", true);
 
         return  "redirect:/incidents/dashboard";
     }
 
     @GetMapping("/declarer")
     public String declarer(Model model){
-        try {
-            List<Equipement> equipements = equipementService.afficherEquipements();
-            List<Prestataire> prestataires = prestataireService.afficherPrestataires();
-            model.addAttribute("incident", new Incident());
-            model.addAttribute("equipements", equipements);
-            model.addAttribute("prestataires", prestataires);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        List<Equipement> equipements = equipementService.afficherEquipements();
+        List<Prestataire> prestataires = prestataireService.afficherPrestataires();
+        model.addAttribute("incident", new Incident());
+        model.addAttribute("equipements", equipements);
+        model.addAttribute("prestataires", prestataires);
         return "incidents/declarer";
     }
 
@@ -93,27 +82,16 @@ public class IncidentController {
     public String declarerEnvoie(@ModelAttribute("incident") Incident incident, RedirectAttributes redirectAttributes){
         incident.setStatut("Non Résolu");
         incident.setDateOuverture(Instant.now());
-        try {
-            incidentService.ajouterIncident(incident);
-            redirectAttributes.addFlashAttribute("ajout_incident",true);
-
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("ajout_incident", false);
-            throw new RuntimeException(e);
-        }
+        incidentService.ajouterIncident(incident);
+        redirectAttributes.addFlashAttribute("ajout_incident",true);
         return  "redirect:/incidents/dashboard";
     }
 
     @PostMapping("dashboard/{id}/resolution")
     public String resolution(@PathVariable int id, RedirectAttributes redirectAttributes){
-        try {
-            incidentService.mettreStatutResolu(id);
-            redirectAttributes.addFlashAttribute("resolution",true);
-            return "redirect:/incidents/" + id + "/details";
-        } catch (IllegalArgumentException | IllegalStateException exception) {
-            redirectAttributes.addFlashAttribute("erreur_resolution", exception.getMessage());
-            return "redirect:/incidents/dashboard";
-        }
+        incidentService.mettreStatutResolu(id);
+        redirectAttributes.addFlashAttribute("resolution",true);
+        return "redirect:/incidents/" + id + "/details";
     }
 
     @GetMapping("/historique")
@@ -126,10 +104,6 @@ public class IncidentController {
     @GetMapping("/{id}/details")
     public String details(@PathVariable int id, Model model, Authentication authentication){
         Incident incident = incidentService.afficherIncident(id);
-        if (incident == null) {
-            model.addAttribute("incident_exist",false);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "L'incident " + id + " n'existe pas");
-        }
         Evaluation eval =  evaluationService.afficherEvaluation(id);
         model.addAttribute("incident", incident);
         model.addAttribute("evaluation", eval);
@@ -143,22 +117,14 @@ public class IncidentController {
     @PostMapping("/{id}/evaluation")
     public String evaluerIncident(@PathVariable int id, @ModelAttribute Evaluation evaluation,
                                   RedirectAttributes redirectAttributes) {
-        try {
-            evaluationService.ajouterEvaluation(id, evaluation);
-            redirectAttributes.addFlashAttribute("evaluationAjoutee", true);
-        } catch (IllegalArgumentException | IllegalStateException exception) {
-            redirectAttributes.addFlashAttribute("erreurEvaluation", exception.getMessage());
-        }
+        evaluationService.ajouterEvaluation(id, evaluation);
+        redirectAttributes.addFlashAttribute("evaluationAjoutee", true);
         return "redirect:/incidents/" + id + "/details";
     }
 
     @PostMapping("/{id}/modifier")
     public String modifierIncident(@PathVariable int id,@RequestParam String description){
-        try {
-            incidentService.modifierDescriptionIncident(id, description);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        incidentService.modifierDescriptionIncident(id, description);
         return "redirect:/incidents/"+id+"/details";
 
     }
