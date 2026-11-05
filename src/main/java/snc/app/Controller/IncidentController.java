@@ -11,10 +11,7 @@ import snc.app.Model.Equipement;
 import snc.app.Model.Evaluation;
 import snc.app.Model.Incident;
 import snc.app.Model.Prestataire;
-import snc.app.Services.EquipementService;
-import snc.app.Services.EvaluationService;
-import snc.app.Services.IncidentService;
-import snc.app.Services.PrestataireService;
+import snc.app.Services.*;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,12 +24,14 @@ public class IncidentController {
     private final EquipementService  equipementService;
     private final PrestataireService prestataireService;
     private final EvaluationService evaluationService;
+    private final HistoriqueService historiqueService;
 
-    public IncidentController(IncidentService incidentService, EquipementService equipementService, PrestataireService prestataireService, EvaluationService evaluationService) {
+    public IncidentController(IncidentService incidentService, EquipementService equipementService, PrestataireService prestataireService, EvaluationService evaluationService, HistoriqueService historiqueService) {
         this.incidentService = incidentService;
         this.equipementService = equipementService;
         this.prestataireService = prestataireService;
         this.evaluationService = evaluationService;
+        this.historiqueService = historiqueService;
     }
 
     @GetMapping("/dashboard")
@@ -66,6 +65,7 @@ public class IncidentController {
 
             incidentService.modifierIncident(incident,"Affecté", prestataire);
             redirectAttributes.addFlashAttribute("add_presta_incident", true);
+            historiqueService.ajouterHistorique("Ajout Prestataire", "Incident");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("add_presta_incident", false);
             throw new RuntimeException(e);
@@ -96,7 +96,7 @@ public class IncidentController {
         try {
             incidentService.ajouterIncident(incident);
             redirectAttributes.addFlashAttribute("ajout_incident",true);
-
+            historiqueService.ajouterHistorique("Ajout Incident", "Incident");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("ajout_incident", false);
             throw new RuntimeException(e);
@@ -156,6 +156,7 @@ public class IncidentController {
     public String modifierIncident(@PathVariable int id,@RequestParam String description){
         try {
             incidentService.modifierDescriptionIncident(id, description);
+            historiqueService.ajouterHistorique("Modifier Incident", "Incident");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

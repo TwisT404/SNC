@@ -129,6 +129,8 @@ public class ConfigurationSecurite {
                         .hasAnyRole("ADMIN", "RESPONSABLE", "CHARGE")
                         .requestMatchers("/equipements/**", "/Station/**", "/dashboard")
                         .hasAnyRole("ADMIN", "RESPONSABLE", "CHARGE")
+                        .requestMatchers("/historique")
+                        .hasAnyRole("ADMIN")
                         .requestMatchers("/api/**").hasAnyRole("ADMIN", "RESPONSABLE", "CHARGE")
                         .anyRequest().denyAll())
                 .oauth2ResourceServer(resourceServer -> resourceServer
