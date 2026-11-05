@@ -23,11 +23,15 @@ public class DroitsAffichageControllerAdvice {
                         .collect(java.util.stream.Collectors.toSet());
 
         boolean administrateur = roles.contains(ROLE_ADMIN);
+        boolean peutGererReferentiels = administrateur || roles.contains(ROLE_RESPONSABLE);
         boolean peutGererIncidents = administrateur
                 || roles.contains(ROLE_RESPONSABLE)
                 || roles.contains(ROLE_CHARGE);
 
         model.addAttribute("peutAdministrer", administrateur);
+        model.addAttribute("peutConsulterReferentiels",
+                peutGererReferentiels || roles.contains(ROLE_CHARGE));
+        model.addAttribute("peutGererReferentiels", peutGererReferentiels);
         model.addAttribute("peutVoirJournalActions", administrateur);
         model.addAttribute("peutDeclarerOuAffecter",
                 administrateur || roles.contains(ROLE_RESPONSABLE));

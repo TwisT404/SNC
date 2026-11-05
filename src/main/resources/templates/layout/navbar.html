@@ -30,6 +30,18 @@
                     Équipements
                 </a>
             </li>
+            <li th:if="${peutConsulterReferentiels}">
+                <a th:href="@{/stations}" class="nav-link-snc">
+                    <i class="bi bi-train-front"></i>
+                    Stations
+                </a>
+            </li>
+            <li th:if="${peutConsulterReferentiels}">
+                <a th:href="@{/prestataires}" class="nav-link-snc">
+                    <i class="bi bi-people"></i>
+                    Prestataires
+                </a>
+            </li>
             <li th:if="${peutVoirJournalActions}">
                 <a th:href="@{/historique}" class="nav-link-snc">
                     <i class="bi bi-pc-display"></i>

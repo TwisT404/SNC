@@ -18,4 +18,8 @@ public class StationService {
     public List<Station> afficherStations() {
         return stationRepository.findAll();
     }
+
+    public void ajoutStation(Station station) {
+        stationRepository.save(station);
+    }
 }
